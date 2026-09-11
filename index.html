@@ -2870,10 +2870,10 @@
 
     <p>
         Imagine<strong> Self circle</strong> represents your true, essential self <strong>(the values 
-        and beliefs you hold about yourself, say someone is calm, explorer, sophisticated, etc.).</strong> Click in the square below to reflect <strong>
-        how closely your virtual experiences were related to your true, essential self .</strong> 
-        The closer the dot to the self circle, the more it is associated with your true essential 
-        self and vice versa. There is no right or wrong answer.
+        and beliefs you hold about yourself, say someone is calm, explorer, sophisticated, etc.).</strong> 
+        Click in the square below to reflect <strong> how closely your virtual experiences were related 
+        to your true, essential self.</strong> The closer the dot to the self circle, the more it is 
+        associated with your true essential self and vice versa. There is no right or wrong answer.
     </p>
 
     <!-- ========================= -->
@@ -2976,7 +2976,7 @@
     <h1>Scenario</h1>
 
     <p>
-        This is the final part of the study where you are given a scenario. Imagine 
+        This is the final part of the study, in which you are given a scenario. Imagine 
         yourself in the situation and respond accordingly.
     </p>
     <h3><strong> Few important concepts: </strong></h3>
@@ -3002,9 +3002,9 @@
         
         <p>
             <strong>
-            Now imagine there are two people: "one of whom knew about your exploring and reaction to virtual tourism experience(Person E), and the other knew 
-            same about your virtual porduct experience (Person M), but neither knew anything else about you"
-            </strong>
+            Now imagine there are two people: one of whom knew about your exploration and reaction to the virtual tourism 
+            experience(Person E), and the other knew the same about your virtual product experience (Person M), but neither 
+            knew anything else about you. </strong>
         </p>
         <p>
             Which person would better know the real you, your true, essential self?
@@ -3020,7 +3020,7 @@
                 >
                 <br>1
                 <p>
-                    Definately Person M
+                    Definitely Person M
                 </p>
             </div>
 
@@ -3100,7 +3100,7 @@
                 >
                 <br>9
                 <p>
-                    Definately Person E
+                    Definitely Person E
                 </p>
             </div>
 
@@ -3117,9 +3117,9 @@
     </p>
 
 
-    <button onclick="submitStudy()">
-        Submit Study
-    </button>
+    <button id="submitBtn" onclick="submitStudy()">
+    Submit Study
+</button>
 
 </div>
 
@@ -4116,7 +4116,14 @@ function submitStudy() {
 
     }
 
-
+    // =====================================
+    // 1. DISABLE BUTTON RIGHT AFTER VALIDATION
+    // =====================================
+    const btn = document.getElementById("submitBtn");
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Submitting...";
+    }
     // Save scenario responses
 
     participantData.S_Q1 =
@@ -4137,37 +4144,32 @@ function submitStudy() {
     // SEND DATA TO GOOGLE SHEETS
     // =====================================
 
+    // =====================================
+    // SEND DATA TO GOOGLE SHEETS
+    // =====================================
     fetch(
         scriptURL,
         {
             method: "POST",
-
-            body: JSON.stringify(
-                participantData
-            ),
-
+            body: JSON.stringify(participantData),
             headers: {
-                "Content-Type":
-                    "text/plain;charset=utf-8"
+                "Content-Type": "text/plain;charset=utf-8"
             }
         }
     )
-
     .then(function(response) {
-
         return response.json();
-
     })
-
     .then(function(result) {
-
-        console.log(
-            "Google Sheets response:",
-            result
-        );
-
+        console.log("Google Sheets response:", result);
 
         if (result.status === "success") {
+            // =====================================
+            // 2. LEAVE DISABLED ON SUCCESS
+            // =====================================
+            if (btn) {
+                btn.innerText = "Submitted";
+            }
 
             alert(
                 "Thank you for participating. " +
@@ -4175,30 +4177,36 @@ function submitStudy() {
             );
 
         } else {
+            // =====================================
+            // 3. RE-ENABLE IF SERVER RETURNS ERROR
+            // =====================================
+            if (btn) {
+                btn.disabled = false;
+                btn.innerText = "Submit Study";
+            }
 
             alert(
                 "There was a problem submitting your responses. " +
                 "Please contact the researcher."
             );
-
         }
-
     })
-
     .catch(function(error) {
+        console.error("Submission error:", error);
 
-        console.error(
-            "Submission error:",
-            error
-        );
+        // =====================================
+        // 4. RE-ENABLE IF NETWORK/FETCH FAILS
+        // =====================================
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Submit Study";
+        }
 
         alert(
             "There was a problem submitting your responses. " +
             "Please contact the researcher."
         );
-
     });
-
 }
 
 </script>
