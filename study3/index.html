@@ -1951,7 +1951,7 @@
     <h1>Scenario</h1>
 
     <p>
-        This is the final part of the study where you are given a scenario. Imagine 
+        This is the final part of the study where you are given few scenarios. Imagine 
         yourself in the situation and respond accordingly.
     </p>
     <h3><strong> Few important concepts: </strong></h3>
@@ -1970,7 +1970,7 @@
 
         <p>
             <strong>
-                Scenario 
+                Scenario 1
             </strong>
         </p>
         
@@ -2083,20 +2083,122 @@
     </div>
 
 
-    <p
-        class="error"
-        id="scenarioError"
-    >
-        Please answer all questions before submitting.
+    <!-- 8. SCENARIO 1 PAGE -->
+    <div id="scenario1Page" class="page">
+        <h1>Scenario 1</h1>
+        <p>
+        This is the final part of the study, in which you are given two scenarios. Imagine 
+        yourself in the situation and respond accordingly.
     </p>
+    <h3><strong> Few important concepts: </strong></h3>
+    <p>
+        Experiential purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention 
+        to acquire a life experience-- an event or series of events that you personally encounter or live through.
+    </p>
+    <p>
+        Material purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention 
+        to acquire a material possession--a tangible object that you obtain and keep in your possession.
+    </p>
+        <div class="question">
+            <p>
+            <strong>
+            Now imagine there are two people, strangers to you: You know all about experiencing and reaction to
+            virtual tourism of one (Person E) and know all about the virtual product experience of the other (Person M)
+            but knew nothing else about either person. Which person do you think you would know better?
+            </strong>
+        </p>
+        <p>
+            Would you have greater insight into Person M or Person E's true, essential self?
+        </p>
+            <div class="scale">
+                <div class="scale-option"><input type="radio" name="S_Q1" value="1"><br>0<p>Definitely Person M's personality</p></div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="2"><br>10</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="3"><br>20</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="4"><br>30</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="5"><br>40</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="6"><br>50</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="7"><br>60</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="8"><br>70</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="9"><br>80</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="10"><br>90</div>
+                <div class="scale-option"><input type="radio" name="S_Q1" value="11"><br>100<p>Definitely Person E's personality</p></div>
+            </div>
+        </div>
+        <p class="error" id="scenario1Error">Please answer Scenario 1.</p>
+        <button onclick="saveScenario1()">Continue</button>
+        </div>
+    
 
-
-    <button onclick="submitStudy()">
-        Submit Study
-    </button>
+    <!-- 9. SCENARIO 2 PAGE -->
+    <div id="scenario2Page" class="page">
+        <h1>Scenario 2</h1>
+         <p>
+            <strong>
+            Imagine you are going to be meeting a new person who might be important in your life
+            (such as a blind date, or maybe you’ve been assigned to work on a project together), 
+            and you can learn just one thing about this person beforehand, either about their material 
+            possessions, or about the experiences they’ve purchased. </strong>
+           
+        </p>
+        <div class="question">
+            <p><strong><p>
+           Which type of information would give you more insight into the other person’s true, essential self?
+        </p></strong></p>
+            <div class="scale">
+                <div class="scale-option"><input type="radio" name="S_Q21" value="1"><br>0<p> Definitely their virtual product experience</p></div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="2"><br>10</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="3"><br>20</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="4"><br>30</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="5"><br>40</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="6"><br>50</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="7"><br>60</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="8"><br>70</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="9"><br>80</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="10"><br>90</div>
+                <div class="scale-option"><input type="radio" name="S_Q21" value="11"><br>100<p> Definitely their virtual tourism experience</p></div>
+            </div>
+        </div>
+        <div class="question">
+            <p><strong><p>
+           Which type of information would be most useful upon meeting the individual in question?
+        </p></strong></p>
+            <div class="scale">
+                <div class="scale-option"><input type="radio" name="S_Q22" value="1"><br>0<p> Definitely their virtual product experience</p></div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="2"><br>10</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="3"><br>20</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="4"><br>30</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="5"><br>40</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="6"><br>50</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="7"><br>60</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="8"><br>70</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="9"><br>80</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="10"><br>90</div>
+                <div class="scale-option"><input type="radio" name="S_Q22" value="11"><br>100<p> Definitely their virtual tourism experience</p></div>
+            </div>
+        </div>
+        <div class="question">
+            <p><strong><p>
+           Which type of information would be more fun to talk about?
+        </p></strong></p>
+            <div class="scale">
+                <div class="scale-option"><input type="radio" name="S_Q23" value="1"><br>0<p> Definitely their virtual product experience</p></div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="2"><br>10</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="3"><br>20</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="4"><br>30</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="5"><br>40</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="6"><br>50</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="7"><br>60</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="8"><br>70</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="9"><br>80</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="10"><br>90</div>
+                <div class="scale-option"><input type="radio" name="S_Q23" value="11"><br>100<p> Definitely their virtual tourism experience</p></div>
+            </div>
+        </div>
+        <p class="error" id="scenario2Error">Please answer all the questions</p>
+        <button id="submitBtn" onclick="submitStudy()">Submit Study</button>
+    </div>
 
 </div>
-
 
 <!-- ========================= -->
     <!-- JASVASCRIPT LOGIC -->
