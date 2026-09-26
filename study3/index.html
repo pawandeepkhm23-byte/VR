@@ -290,6 +290,7 @@
             
 
 </div>
+
     <!-- ========================= -->
     <!-- DEMOGRAPHICS PAGE -->
     <!-- ========================= -->
@@ -1024,7 +1025,7 @@
 
 <div id="virtualitemsexperiencePage" class="page">
 
-    <h1>Virtual items experience)</h1>
+    <h1>Virtual items experience</h1>
 
     <p>
         Please answer the following questions based on
@@ -1913,7 +1914,7 @@
             </div>
 
         </div>
-
+        
 
         <p
             id="spatial2Message"
@@ -2075,24 +2076,13 @@
         <button onclick="saveScenario()">Continue</button>
 
     </div>
-
+    </div>
 
     <!-- 8. SCENARIO 1 PAGE -->
     <div id="scenario1Page" class="page">
-        <h1>Scenario 1</h1>
-        <p>
-        This is the final part of the study, in which you are given two scenarios. Imagine 
-        yourself in the situation and respond accordingly.
-    </p>
-    <h3><strong> Few important concepts: </strong></h3>
-    <p>
-        Experiential purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention 
-        to acquire a life experience-- an event or series of events that you personally encounter or live through.
-    </p>
-    <p>
-        Material purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention 
-        to acquire a material possession--a tangible object that you obtain and keep in your possession.
-    </p>
+        <h1>Scenario 2</h1>
+        
+    
         <div class="question">
             <p>
             <strong>
@@ -2125,7 +2115,7 @@
 
     <!-- 9. SCENARIO 2 PAGE -->
     <div id="scenario2Page" class="page">
-        <h1>Scenario 2</h1>
+        <h1>Scenario 3</h1>
          <p>
             <strong>
             Imagine you are going to be meeting a new person who might be important in your life
@@ -2194,749 +2184,282 @@
 
 </div>
 
-<!-- ========================= -->
-    <!-- JASVASCRIPT LOGIC -->
-    <!-- ========================= -->
-     <script>
-
-
-
+<script>
+// Auto-generate Participant ID to prevent local storage lockouts
 let participantData = {
-
-    participantID: null,
-
+    participantID: "P_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
     email: null,
-
     age: null,
-
     gender: null,
-
     Education: null,
-
-    MonthlyIncome: null
-
+    MonthlyIncome: null,
+    MVS_1: null,
+    MVS_2: null,
+    MVS_3: null,
+    E2_Q1: null,
+    E2_Q2: null,
+    E2_Q3: null,
+    E2_clickX: null,
+    E2_clickY: null,
+    E2_selfX: null,
+    E2_selfY: null,
+    E2_differenceX: null,
+    E2_differenceY: null,
+    E2_distanceFromSelf: null,
+    S_Q1: null,
+    S_Q2: null,
+    S_Q31: null,
+    S_Q32: null,
+    S_Q33: null,
+    S_Q4: null
 };
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbyVugl6_lEW7VKq3-ZLbuMa3KpzFarISE9Fv6yrW5f6wXQRodwCOGrhltc7vob2Cum_IA/exec";
+
+// Helper function to handle page switching
+function switchPage(currentId, nextId) {
+    document.getElementById(currentId).classList.remove("active");
+    document.getElementById(nextId).classList.add("active");
+}
 
 function goToDemographics() {
-
-    const consent =
-        document.getElementById("consent").checked;
-
-
+    const consent = document.getElementById("consent").checked;
     if (!consent) {
-
-        document.getElementById("consentError")
-            .style.display = "block";
-
+        document.getElementById("consentError").style.display = "block";
         return;
-
     }
-
-
-    // Hide Consent Page
-
-    document.getElementById("consentPage")
-        .classList.remove("active");
-
-
-    // Show Participant Information Page
-
-    document.getElementById("participantInfoPage")
-        .classList.add("active");
-
+    switchPage("consentPage", "participantInfoPage");
 }
-
-
-// =====================================
-// SAVE PARTICIPANT INFORMATION
-// =====================================
 
 function saveParticipantInfo() {
-
-        const email =
-        document.getElementById("email").value.trim();
-
-
-    if (
-       
-        email === ""
-    ) {
-
-        document.getElementById("participantInfoError")
-            .style.display = "block";
-
+    const email = document.getElementById("email").value.trim();
+    if (email === "") {
+        document.getElementById("participantInfoError").style.display = "block";
         return;
-
     }
-
-
-    // Save to master participant data
-
-    participantData.email =
-        email;
-
-
-    console.log(
-        "Participant Information:",
-        participantData
-    );
-
-
-    // Move to Demographics
-
-    document.getElementById("participantInfoPage")
-        .classList.remove("active");
-
-    document.getElementById("demographicPage")
-        .classList.add("active");
-
+    participantData.email = email;
+    switchPage("participantInfoPage", "demographicPage");
 }
-
-
-// =====================================
-// SAVE DEMOGRAPHICS
-// =====================================
 
 function saveDemographics() {
+    const age = document.getElementById("age").value;
+    const gender = document.querySelector('input[name="gender"]:checked');
+    const Education = document.querySelector('input[name="Education"]:checked');
+    const MonthlyIncome = document.getElementById("MonthlyIncome").value;
 
-    const age =
-        document.getElementById("age").value;
-
-
-    const gender =
-        document.querySelector(
-            'input[name="gender"]:checked'
-        );
-    const Education =
-        document.querySelector(
-            'input[name="Education"]:checked'
-        );
-
-
-    const MonthlyIncome =
-        document.getElementById("MonthlyIncome").value;
-
-
-    // Check whether required information is provided
-
-    if (
-        age === "" ||
-        gender === null ||
-        Education ===null ||
-        MonthlyIncome === ""
-    ) {
-
-        document.getElementById("demographicError")
-            .style.display = "block";
-
-        return;
-
-    }
-
-
-    // Add demographics to master data
-
-    participantData.age =
-        age;
-    participantData.gender =
-        gender.value;
-     participantData.Education =
-        Education.value;
-    participantData.MonthlyIncome =
-        MonthlyIncome;
-
-
-    console.log(
-        "Participant Data:",
-        participantData
-    );
-
-
-    // Move to Personality
-
-    document.getElementById("demographicPage")
-        .classList.remove("active");
-
-    document.getElementById("personalityPage")
-        .classList.add("active");
-
-}
-        
-        function savePersonality() {
-
-    const MVS_1 =
-        document.querySelector('input[name="MVS_1"]:checked');
-    const MVS_2 =
-        document.querySelector('input[name="MVS_2"]:checked');
-    const MVS_3 =
-        document.querySelector('input[name="MVS_3"]:checked');
-    const MVS_4 =
-        document.querySelector('input[name="MVS_4"]:checked');
-    const MVS_5 =
-        document.querySelector('input[name="MVS_5"]:checked');
-    const MVS_6 =
-        document.querySelector('input[name="MVS_6"]:checked');
-    const MVS_7 =
-        document.querySelector('input[name="MVS_7"]:checked');
-    const MVS_8 =
-        document.querySelector('input[name="MVS_8"]:checked');
-    const MVS_9 =
-        document.querySelector('input[name="MVS_9"]:checked');
-
-
-    if (
-        MVS_1 === null ||
-        MVS_2 === null ||
-        MVS_3 === null ||
-        MVS_4 === null ||
-        MVS_5 === null ||
-        MVS_6 === null ||
-        MVS_7 === null ||
-        MVS_8 === null ||
-        MVS_9 === null
-    ) {
-
-        document.getElementById("personalityError")
-            .style.display = "block";
-
+    if (age === "" || !gender || !Education || MonthlyIncome === "") {
+        document.getElementById("demographicError").style.display = "block";
         return;
     }
-
-// Add personality responses
-    // to the master participant data
-     participantData.MVS_1 =
-        MVS_1.value;
-    participantData.MVS_2 =
-        MVS_2.value;
-    participantData.MVS_3 =
-        MVS_3.value;
-    participantData.MVS_4 =
-        MVS_4.value;
-    participantData.MVS_5 =
-        MVS_5.value;
-    participantData.MVS_6 =
-        MVS_6.value;
-    participantData.MVS_7 =
-        MVS_7.value;
-    participantData.MVS_8 =
-        MVS_8.value;
-    participantData.MVS_9 =
-        MVS_9.value;
-// Check in browser console
-
-    console.log(
-        "MVS_1:",
-    participantData.MVS_1
-);
-
-    console.log(
-        "MVS_2:",
-        participantData.MVS_2
-    );
-
-    console.log(
-        "MVS_3:",
-        participantData.MVS_3
-    );
-    
-
-    console.log(
-        "MVS_4:",
-        participantData.MVS_4
-    );
-
-    console.log(
-        "MVS_5:",
-        participantData.MVS_5
-    );
-
-    console.log(
-        "MVS_6:",
-        participantData.MVS_6
-    );
-    // Check in browser console
-
-    console.log(
-        "MVS_7:",
-        participantData.MVS_7
-    );
-
-    console.log(
-        "MVS_8:",
-        participantData.MVS_8
-    );
-
-    console.log(
-        "MVS_9:",
-        participantData.MVS_9
-    );
-     console.log(
-        "Complete data:",
-        participantData
-    );
-
-
-    // Move to Experience 1
-
-    document.getElementById("personalityPage")
-        .classList.remove("active");
-
-    document.getElementById("virtualitemsexperiencePage")
-        .classList.add("active");
-
+    participantData.age = age;
+    participantData.gender = gender.value;
+    participantData.Education = Education.value;
+    participantData.MonthlyIncome = MonthlyIncome;
+    switchPage("demographicPage", "personalityPage");
 }
-       
-// =====================================
-// SAVE EXPERIENCE 1 RESPONSES
-// =====================================
 
-function savevirtualitemsExperienceResponses() {
-
-    const e2q1 =
-        document.querySelector(
-            'input[name="E2_Q1"]:checked'
-        );
-
-    const e2q2 =
-        document.querySelector(
-            'input[name="E2_Q2"]:checked'
-        );
-       
-    const e2q3 =
-        document.querySelector(
-            'input[name="E2_Q3"]:checked'
-        );
-    const e2q4 =
-        document.querySelector(
-            'input[name="E2_Q4"]:checked'
-        );
-    const e2q5 =
-        document.querySelector(
-            'input[name="E2_Q5"]:checked'
-        );
-    const e2q6 =
-        document.querySelector(
-            'input[name="E2_Q6"]:checked'
-        );
-    const e2q7 =
-        document.querySelector(
-            'input[name="E2_Q7"]:checked'
-        );
-    const e2q8 =
-        document.querySelector(
-            'input[name="E2_Q8"]:checked'
-        );
-    const e2q9 =
-        document.querySelector(
-            'input[name="E2_Q9"]:checked'
-        );
-    const e2q10 =
-        document.querySelector(
-            'input[name="E2_Q10"]:checked'
-        );
-    const e2q11 =
-        document.querySelector(
-            'input[name="E2_Q11"]:checked'
-        );
-    const e2q12 =
-        document.querySelector(
-            'input[name="E2_Q12"]:checked'
-        );
+function savePersonality() {
+    const MVS_1 = document.querySelector('input[name="MVS_1"]:checked');
+    const MVS_2 = document.querySelector('input[name="MVS_2"]:checked');
+    const MVS_3 = document.querySelector('input[name="MVS_3"]:checked');
+    const MVS_4 = document.querySelector('input[name="MVS_4"]:checked');
+    const MVS_5 = document.querySelector('input[name="MVS_5"]:checked');
+    const MVS_6 = document.querySelector('input[name="MVS_6"]:checked');
+    const MVS_7 = document.querySelector('input[name="MVS_7"]:checked');
+    const MVS_8 = document.querySelector('input[name="MVS_8"]:checked');
+    const MVS_9 = document.querySelector('input[name="MVS_9"]:checked');
 
 
-    if (
-        e2q1 === null ||
-        e2q2 === null ||
-        e2q3 === null ||
-        e2q4 === null ||
-        e2q5 === null ||
-        e2q6 === null ||
-        e2q7 === null ||
-        e2q8 === null ||
-        e2q9 === null ||
-        e2q10 === null ||
-        e2q11 === null ||
-       e2q12 === null 
-    ) {
-
-        document.getElementById("experience2Error")
-            .style.display = "block";
-
+    if (!MVS_1 || !MVS_2 || !MVS_3|| !MVS_4 || !MVS_5 || !MVS_6|| !MVS_7 || !MVS_8 || !MVS_9) {
+        document.getElementById("personalityError").style.display = "block";
         return;
-
     }
-// Save Experience 2 responses
-
-    participantData.E2_Q1 =
-        e2q1.value;
-
-    participantData.E2_Q2 =
-        e2q2.value;
-    
-    participantData.E2_Q3 =
-        e2q3.value;
-
-    participantData.E2_Q4 =
-        e2q4.value;
-    
-    participantData.E2_Q5 =
-        e2q5.value;
-
-    participantData.E2_Q6 =
-        e2q6.value;
-    
-    participantData.E2_Q7 =
-        e2q7.value;
-
-    participantData.E2_Q8 =
-        e2q8.value;
-    
-    participantData.E2_Q9 =
-        e2q9.value;
-
-    participantData.E2_Q10 =
-        e2q10.value;
-
-    participantData.E2_Q11 =
-        e2q11.value;
-
-    participantData.E2_Q12 =
-        e2q12.value;
-
-    console.log(
-        "Participant Data after Experience 2:",
-        participantData
-    );
-
-
-    // Move to Spatial Task
-
-    document.getElementById("virtualitemsexperiencePage")
-        .classList.remove("active");
-
-    document.getElementById("spatialPage")
-        .classList.add("active");
-
-}
-    
-// =====================================
-// SPATIAL DATA
-// =====================================
-
-let spatialData = {
-
-   experience2: null
-
-};
-
-
-
-// =====================================
-// MOVE TO SPATIAL TASK 2
-// =====================================
-
-function goToSpatialPage() {
-
-  
-
-    document.getElementById("spatialTask2")
-        .style.display = "block";
-
+    participantData.MVS_1 = MVS_1.value;
+    participantData.MVS_2 = MVS_2.value;
+    participantData.MVS_3 = MVS_3.value;
+    participantData.MVS_4 = MVS_4.value;
+    participantData.MVS_5 = MVS_5.value;
+    participantData.MVS_6 = MVS_6.value;
+    participantData.MVS_7 = MVS_7.value;
+    participantData.MVS_8 = MVS_8.value;
+    participantData.MVS_9 = MVS_9.value;
+    switchPage("personalityPage", "virtualitemsexperiencePage");
 }
 
+function savevirtualitemsexperienceResponses() {
+    const e2q1 = document.querySelector('input[name="E2_Q1"]:checked');
+    const e2q2 = document.querySelector('input[name="E2_Q2"]:checked');
+    const e2q3 = document.querySelector('input[name="E2_Q3"]:checked');
+    const e2q4 = document.querySelector('input[name="E2_Q4"]:checked');
+    const e2q5 = document.querySelector('input[name="E2_Q5"]:checked');
+    const e2q6 = document.querySelector('input[name="E2_Q6"]:checked');
+    const e2q7 = document.querySelector('input[name="E2_Q7"]:checked');
+    const e2q8 = document.querySelector('input[name="E2_Q8"]:checked');
+    const e2q9 = document.querySelector('input[name="E2_Q9"]:checked');
+    const e2q10 = document.querySelector('input[name="E2_Q10"]:checked');
+    const e2q11 = document.querySelector('input[name="E2_Q11"]:checked');
+    const e2q12 = document.querySelector('input[name="E2_Q12"]:checked');
 
-// =====================================
-// SPATIAL TASK 2
-// =====================================
 
+    if (!e2q1 || !e2q2 || !e2q3|| !e2q4 || !e2q5 || !e2q6|| !e2q7 || !e2q8 || !e2q9|| !e2q10 || !e2q11|| !e2q12 ) {
+        document.getElementById("experience2Error").style.display = "block";
+        return;
+    }
+    participantData.E2_Q1 = e2q1.value;
+    participantData.E2_Q2 = e2q2.value;
+    participantData.E2_Q3 = e2q3.value;
+    participantData.E2_Q4 = e2q4.value;
+    
+    participantData.E2_Q5 = e2q5.value;
+
+    participantData.E2_Q6 = e2q6.value;
+    
+    participantData.E2_Q7 = e2q7.value;
+
+    participantData.E2_Q8 = e2q8.value;
+    
+    participantData.E2_Q9 = e2q9.value;
+
+    participantData.E2_Q10 = e2q10.value;
+
+    participantData.E2_Q11 = e2q11.value;
+
+    participantData.E2_Q12 = e2q12.value;
+
+    switchPage("virtualitemsexperiencePage", "spatialPage");
+}
+
+// Helper function to dynamically place dot where clicked
+function showSpatialClick(canvas, x, y) {
+    // Remove any existing click dot if participant clicks again
+    const existingDot = canvas.querySelector('.spatial-click');
+    if (existingDot) {
+        existingDot.remove();
+    }
+
+    // Create and append the new visual click marker
+    const dot = document.createElement('div');
+    dot.className = 'spatial-click';
+    dot.style.left = x + 'px';
+    dot.style.top = y + 'px';
+    canvas.appendChild(dot);
+}
+
+// Function triggered on canvas click
 function recordSpatialClick2(event) {
+    const canvas = document.getElementById("spatialCanvas2");
+    const rect = canvas.getBoundingClientRect();
+    
+    // Calculate click coordinates relative to canvas
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-    const canvas =
-        document.getElementById("spatialCanvas2");
+    // SELF circle position (Canvas center)
+    const selfX = canvas.clientWidth / 2;
+    const selfY = canvas.clientHeight / 2;
 
-    const rect =
-        canvas.getBoundingClientRect();
+    // Calculate distance from SELF circle center
+    const dx = x - selfX;
+    const dy = y - selfY;
+    const distance = Math.sqrt((dx * dx) + (dy * dy));
 
+    // Save calculations to master data object
+    participantData.E2_clickX = Math.round(x);
+    participantData.E2_clickY = Math.round(y);
+    participantData.E2_selfX = Math.round(selfX);
+    participantData.E2_selfY = Math.round(selfY);
+    participantData.E2_differenceX = Math.round(dx);
+    participantData.E2_differenceY = Math.round(dy);
+    participantData.E2_distanceFromSelf = Math.round(distance);
 
-    const x =
-        event.clientX - rect.left;
+    // Render visual dot on canvas
+    showSpatialClick(canvas, x, y);
 
-    const y =
-        event.clientY - rect.top;
-
-
-    // SELF position
-
-    const selfX =
-        canvas.clientWidth / 2;
-
-    const selfY =
-        canvas.clientHeight / 2;
-
-
-    // Difference from SELF
-
-    const dx =
-        x - selfX;
-
-    const dy =
-        y - selfY;
-
-
-    // Distance from SELF
-
-    const distance =
-        Math.sqrt(
-            (dx * dx) +
-            (dy * dy)
-        );
-
-
-    // Store Experience 2 data
-
-    spatialData.experience2 = {
-
-        clickX: x,
-
-        clickY: y,
-
-        selfX: selfX,
-
-        selfY: selfY,
-
-        differenceX: dx,
-
-        differenceY: dy,
-
-        distanceFromSelf: distance
-
-    };
-    // Add Experience 2 spatial data
-// to the master participant data
-
-participantData.E2_clickX = x;
-
-participantData.E2_clickY = y;
-
-participantData.E2_selfX = selfX;
-
-participantData.E2_selfY = selfY;
-
-participantData.E2_differenceX = dx;
-
-participantData.E2_differenceY = dy;
-
-participantData.E2_distanceFromSelf =
-    distance;
-
-
-    console.log(
-        "Experience 2 Spatial Data:",
-        spatialData.experience2
-    );
-
-
-    // Show click
-
-    showSpatialClick(
-        canvas,
-        x,
-        y
-    );
-
-
-    // Show confirmation
-
-    document.getElementById("spatial2Message")
-        .style.display = "block";
-
-
-    // Show Continue button
-
-    document.getElementById("spatial2Continue")
-        .style.display = "inline-block";
-
+    // Display completion message and Continue button
+    document.getElementById("spatial2Message").style.display = "block";
+    document.getElementById("spatial2Continue").style.display = "inline-block";
 }
-
-
-// =====================================
-// FINISH SPATIAL TASK
-// =====================================
 
 function finishSpatialTask() {
-
-    console.log(
-        "FINAL SPATIAL DATA:",
-        spatialData
-    );
-
-
-    document.getElementById("spatialPage")
-        .classList.remove("active");
-
-
-    document.getElementById("scenarioPage")
-        .classList.add("active");
-
+    // Validate that participant actually made a click before proceeding
+    if (participantData.E2_distanceFromSelf === null) {
+        alert("Please click inside the canvas to indicate your response.");
+        return;
+    }
+    switchPage("spatialPage", "scenarioPage");
 }
 
-// =====================================
-// SAVE SCENARIO RESPONSES
-// =====================================
-function saveScenario(){
-        const sq1 = document.querySelector('input[name="S_Q1"]:checked');
-        if (!sq1) {
-            document.getElementById("scenarioError").style.display = "block";
-            return;
-        }
-        participantData.S_Q1 = sq1.value;
-        switchPage("scenarioPage", "scenario1Page");
+function saveScenario() {
+    const sq1 = document.querySelector('input[name="S_Q1"]:checked');
+    if (!sq1) {
+        document.getElementById("scenarioError").style.display = "block";
+        return;
     }
-function saveScenario1(){
-        const sq2 = document.querySelector('input[name="S_Q2"]:checked');
-        if (!sq2) {
-            document.getElementById("scenarioError").style.display = "block";
-            return;
-        }
-        participantData.S_Q2 = sq2.value;
-        switchPage("scenario1Page", "scenario2Page");
-    }
- function submitStudy() {
-        const sq21 = document.querySelector('input[name="S_Q21"]:checked');
-        const sq22 = document.querySelector('input[name="S_Q22"]:checked');
-        const sq23 = document.querySelector('input[name="S_Q23"]:checked');
-        if (!sq21 || !sq22 || !sq23 ) {
-            document.getElementById("scenario2Error").style.display = "block";
-            return;
-        }
-        participantData.S_Q21 = sq21.value;
-        participantData.S_Q22 = sq22.value;
-        participantData.S_Q23 = sq23.value;
-
-
-
-        if (localStorage.getItem("submitted_" + participantData.participantID)) {
-            alert("This Participant ID has already submitted responses.");
-            return;
-        }
-
-        const btn = document.getElementById("submitBtn");
-        btn.disabled = true;
-        btn.innerText = "Submitting...";
-
-        sendDataWithRetry(participantData);
-    }
-
-    function sendDataWithRetry(payload, maxRetries = 5, delay = 3000) {
-        saveProgress();
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        })
-        .then(() => {
-            localStorage.setItem("submitted_" + payload.participantID, "true");
-            localStorage.removeItem("vr_study_data");
-            alert("Study successfully submitted!");
-        })
-        .catch((err) => {
-            if (maxRetries > 0) {
-                setTimeout(() => sendDataWithRetry(payload, maxRetries - 1, delay * 1.5), delay);
-            } else {
-                alert("Network error. Your responses remain saved on your device and will sync automatically when back online.");
-            }
-        });
-    }
-
-    window.addEventListener("online", () => {
-        const saved = localStorage.getItem("vr_study_data");
-        if (saved) {
-            const data = JSON.parse(saved);
-            if (!localStorage.getItem("submitted_" + data.participantID)) {
-                sendDataWithRetry(data);
-            }
-        }
-    });
-
-    // =====================================
-    // GOOGLE APPS SCRIPT URL
-    // =====================================
-
-    const scriptURL =
-        
-        "https://script.google.com/macros/s/AKfycbwBfG0wNj_WSIhHVPF451P9gDUjtT3bdaDWvOhGgcjjktY7lQjAhIQGqhVyF9Ae3805Uw/exec";
-
-    // =====================================
-    // SEND DATA TO GOOGLE SHEETS
-    // =====================================
-
-    fetch(
-        scriptURL,
-        {
-            method: "POST",
-
-            body: JSON.stringify(
-                participantData
-            ),
-
-            headers: {
-                "Content-Type":
-                    "text/plain;charset=utf-8"
-            }
-        }
-    )
-
-    .then(function(response) {
-
-        return response.json();
-
-    })
-
-    .then(function(result) {
-
-        console.log(
-            "Google Sheets response:",
-            result
-        );
-
-
-        if (result.status === "success") {
-
-            alert(
-                "Thank you for participating. " +
-                "Your responses have been successfully recorded."
-            );
-
-        } else {
-
-            alert(
-                "There was a problem submitting your responses. " +
-                "Please contact the researcher."
-            );
-
-        }
-
-    })
-
-    .catch(function(error) {
-
-        console.error(
-            "Submission error:",
-            error
-        );
-
-        alert(
-            "There was a problem submitting your responses. " +
-            "Please contact the researcher."
-        );
-
-    });
-
+    participantData.S_Q1 = sq1.value;
+    switchPage("scenarioPage", "scenario1Page");
 }
 
+function saveScenario() {
+    const sq1 = document.querySelector('input[name="S_Q1"]:checked');
+    if (!sq1) {
+        document.getElementById("scenarioError").style.display = "block";
+        return;
+    }
+    participantData.S_Q1 = sq1.value;
+    switchPage("scenarioPage", "scenario1Page");
+}
+
+function saveScenario1() {
+    const sq2 = document.querySelector('input[name="S_Q2"]:checked');
+    if (!sq2) {
+        document.getElementById("scenario1Error").style.display = "block";
+        return;
+    }
+    participantData.S_Q2 = sq2.value;
+    switchPage("scenario1Page", "scenario2Page");
+}
+
+function submitStudy() {
+    // Correctly targets the inputs present on Scenario 2
+    const sq31 = document.querySelector('input[name="S_Q31"]:checked');
+    const sq32 = document.querySelector('input[name="S_Q32"]:checked');
+    const sq33 = document.querySelector('input[name="S_Q33"]:checked');
+
+    if (!sq31 || !sq32 || !sq33) {
+        document.getElementById("scenario2Error").style.display = "block";
+        return;
+    }
+
+    participantData.S_Q31 = sq31.value;
+    participantData.S_Q32 = sq32.value;
+    participantData.S_Q33 = sq33.value;
+
+    if (localStorage.getItem("submitted_" + participantData.participantID)) {
+        alert("This Participant ID has already submitted responses.");
+        return;
+    }
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerText = "Submitting...";
+
+    sendDataWithRetry(participantData);
+}
+
+
+function sendDataWithRetry(payload) {
+    fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(() => {
+        localStorage.setItem("submitted_" + payload.participantID, "true");
+        alert("Study successfully submitted!");
+    })
+    .catch((err) => {
+        alert("Network error submitting study. Please try again.");
+    });
+}
 </script>
-
-</body>
-
-</html>
