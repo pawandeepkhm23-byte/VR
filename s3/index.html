@@ -2274,10 +2274,10 @@ function saveDemographics() {
     const age = document.getElementById("age").value;
     const gender = document.querySelector('input[name="gender"]:checked');
     const Education = document.querySelector('input[name="Education"]:checked');
-    const Country = document.querySelector("Country").value;
+    const Country = document.getElementById("Country").value.trim();
     const MonthlyIncome = document.getElementById("MonthlyIncome").value;
 
-    if (age === "" || !gender || !Education || !Country || MonthlyIncome === "") {
+    if (age === "" || !gender || !Education || Country === "" || MonthlyIncome === "") {
         document.getElementById("demographicError").style.display = "block";
         return;
     }
