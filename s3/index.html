@@ -420,7 +420,17 @@
 
         </div>
 
+        <label for="Country">
 
+            Country
+
+        </label>
+
+        <input
+            type="number"
+            id="Country"
+            placeholder="Which country do you belong to"
+        >
 
         <!-- Monthly Family Income -->
 
@@ -2192,6 +2202,7 @@ let participantData = {
     age: null,
     gender: null,
     Education: null,
+    Country: null,
     MonthlyIncome: null,
     MVS_1: null,
     MVS_2: null,
@@ -2245,15 +2256,17 @@ function saveDemographics() {
     const age = document.getElementById("age").value;
     const gender = document.querySelector('input[name="gender"]:checked');
     const Education = document.querySelector('input[name="Education"]:checked');
+    const Country = document.querySelector("Country").value;
     const MonthlyIncome = document.getElementById("MonthlyIncome").value;
 
-    if (age === "" || !gender || !Education || MonthlyIncome === "") {
+    if (age === "" || !gender || !Education || !Country || MonthlyIncome === "") {
         document.getElementById("demographicError").style.display = "block";
         return;
     }
     participantData.age = age;
     participantData.gender = gender.value;
     participantData.Education = Education.value;
+    participantData.Country = Country.value;
     participantData.MonthlyIncome = MonthlyIncome;
     switchPage("demographicPage", "personalityPage");
 }
