@@ -830,6 +830,7 @@
         
         S_Q1: null,
         S_Q21: null, S_Q22: null, S_Q23: null,
+        consent: false,
         isComplete: false,
         lastUpdated: new Date().toISOString()
     };
@@ -846,6 +847,33 @@
         if (syncToSheet && participantData.participantID) {
             sendPartialDataToSheet(participantData);
         }
+    }
+    // Attach live event listeners so every click/type saves to localStorage instantly
+    function bindLiveAutoSave() {
+        document.addEventListener("change", (e) => {
+            const target = e.target;
+            if (!target) return;
+
+            if (target.id === "consent") {
+                participantData.consent = target.checked;
+            } else if (target.name) { 
+                // Handles all radio buttons (gender, MVS_1-3, E1_Q1-3, E2_Q1-3, S_Q1, S_Q21-23)
+                participantData[target.name] = target.value;
+            } else if (target.id) { 
+                // Handles dropdowns like MonthlyIncome and text inputs
+                participantData[target.id] = target.value;
+            }
+            saveProgress(false); // Instant local save without triggering network requests
+        });
+
+        document.addEventListener("input", (e) => {
+            const target = e.target;
+            if (!target) return;
+            if (target.id && (target.type === "text" || target.type === "number" || target.type === "email")) {
+                participantData[target.id] = target.value;
+                saveProgress(false);
+            }
+        });
     }
     // Background sync function for partial/step-by-step saves
     function sendPartialDataToSheet(data) {
@@ -1110,50 +1138,64 @@
         });
     }
 
-    // Auto-restore form fields and active page if page reloaded
-    window.addEventListener("DOMContentLoaded", () => {
+    // On page reload: Restore stored data into all form controls and open active page
+    function restoreProgress() {
         const savedRaw = localStorage.getItem("vr_study_data");
         if (!savedRaw) return;
 
         try {
             const parsed = JSON.parse(savedRaw);
-            const savedData = parsed.data || parsed;
-            const targetPage = parsed.activePage || "consentPage";
+            if (parsed.data) {
+                participantData = { ...participantData, ...parsed.data };
+            }
+            if (parsed.activePage) {
+                currentActivePage = parsed.activePage;
+            }
 
-            participantData = { ...participantData, ...savedData };
+            // 1. Restore Checkbox
+            const consentElem = document.getElementById("consent");
+            if (consentElem && participantData.consent) {
+                consentElem.checked = true;
+            }
 
-            // Fill text & number inputs
-            if (participantData.participantID) document.getElementById("participantID").value = participantData.participantID;
-            if (participantData.email) document.getElementById("email").value = participantData.email;
-            if (participantData.age) document.getElementById("age").value = participantData.age;
-            if (participantData.gender) document.getElementById("gender").value = participantData.gender;
-            if (participantData.Education) document.getElementById("Education").value = participantData.Education;
-            if (participantData.MonthlyIncome) document.getElementById("MonthlyIncome").value = participantData.MonthlyIncome;
-            if (participantData.participantID || participantData.email) document.getElementById("consent").checked = true;
-
-            // Fill radio buttons
-            const radioFields = ["gender", "Education", "MVS_1", "MVS_2", "MVS_3", "MVS_4", "MVS_5", "MVS_6", "MVS_7", "MVS_8", "MVS_9", "E1_Q1", "E1_Q2", "E1_Q3", 
-                                 "E1_Q4", "E1_Q5", "E1_Q6", "E1_Q7", "E1_Q8", "E1_Q9", "E1_Q10", "E1_Q11", "E1_Q12", "E2_Q1", "E2_Q2", "E2_Q3", "E2_Q4", "E2_Q5", "E2_Q6", 
-                                 "E2_Q7", "E2_Q8", "E2_Q9", "E2_Q10", "E2_Q11", "E2_Q12", "S_Q1", "S_Q21", "S_Q22", "S_Q23"];
-            radioFields.forEach(field => {
-                if (participantData[field]) {
-                    const el = document.querySelector(`input[name="${field}"][value="${participantData[field]}"]`);
-                    if (el) el.checked = true;
+            // 2. Restore Text, Email, Number, and Dropdown Inputs by ID
+            ["participantID", "email", "age", "MonthlyIncome"].forEach(id => {
+                const elem = document.getElementById(id);
+                if (elem && participantData[id] !== undefined && participantData[id] !== null) {
+                    elem.value = participantData[id];
                 }
             });
 
-            // Navigate to last active page
-            if (targetPage && targetPage !== "consentPage") {
-                document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-                const el = document.getElementById(targetPage);
-                if (el) {
-                    el.classList.add("active");
-                    currentActivePage = targetPage;
+            // 3. Restore all Radio Buttons by Name
+            const radioFields = [
+                "gender", "MVS_1", "MVS_2", "MVS_3",
+                "E1_Q1", "E1_Q2", "E1_Q3",
+                "E2_Q1", "E2_Q2", "E2_Q3",
+                "S_Q1", "S_Q21", "S_Q22", "S_Q23"
+            ];
+
+            radioFields.forEach(field => {
+                const val = participantData[field];
+                if (val !== undefined && val !== null && val !== "") {
+                    const radio = document.querySelector(`input[name="${field}"][value="${val}"]`);
+                    if (radio) radio.checked = true;
                 }
+            });
+
+            // 4. Navigate back to where the user left off
+            if (currentActivePage && document.getElementById(currentActivePage)) {
+                document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+                document.getElementById(currentActivePage).classList.add("active");
             }
-        } catch(e) {
-            console.error("Failed to restore saved progress:", e);
+        } catch (e) {
+            console.error("Error restoring state:", e);
         }
+    }
+
+    // Initialize listeners and restore state when page loads
+    window.addEventListener("DOMContentLoaded", () => {
+        restoreProgress();
+        bindLiveAutoSave();
     });
 
     // Auto-sync offline data when internet connection is restored
