@@ -3128,291 +3128,161 @@
     <!-- JASVASCRIPT LOGIC -->
     <!-- ========================= -->
      <script>
-
-
-
-let participantData = {
-
-    participantID: null,
-
-    email: null,
-
-    age: null,
-
-    gender: null,
-
-    Education: null,
-
-    MonthlyIncome: null,
-    Condition: null
-
-};
-
-function goToDemographics() {
-
-    const consent =
-        document.getElementById("consent").checked;
-
-
-    if (!consent) {
-
-        document.getElementById("consentError")
-            .style.display = "block";
-
-        return;
-
-    }
-
-
-    // Hide Consent Page
-
-    document.getElementById("consentPage")
-        .classList.remove("active");
-
-
-    // Show Participant Information Page
-
-    document.getElementById("participantInfoPage")
-        .classList.add("active");
-
-}
-
-
-// =====================================
-// SAVE PARTICIPANT INFORMATION
-// =====================================
-
-function saveParticipantInfo() {
-
-    const participantID =
-        document.getElementById("participantID").value.trim();
-
-    const email =
-        document.getElementById("email").value.trim();
-
-
-    if (
-        participantID === "" ||
-        email === ""
-    ) {
-
-        document.getElementById("participantInfoError")
-            .style.display = "block";
-
-        return;
-
-    }
-
-
-    // Save to master participant data
-
-    participantData.participantID =
-        participantID;
-
-    participantData.email =
-        email;
-
-
-    console.log(
-        "Participant Information:",
-        participantData
-    );
-
-
-    // Move to Demographics
-
-    document.getElementById("participantInfoPage")
-        .classList.remove("active");
-
-    document.getElementById("demographicPage")
-        .classList.add("active");
-
-}
-
-
-// =====================================
-// SAVE DEMOGRAPHICS
-// =====================================
-
-function saveDemographics() {
-
-    const age =
-        document.getElementById("age").value;
-
-
-    const gender =
-        document.querySelector(
-            'input[name="gender"]:checked'
-        );
-    const Education =
-        document.querySelector(
-            'input[name="Education"]:checked'
-        );
-
-
-    const MonthlyIncome =
-        document.getElementById("MonthlyIncome").value;
-
-
-    // Check whether required information is provided
-
-    if (
-        age === "" ||
-        gender === null ||
-        Education ===null ||
-        MonthlyIncome === ""
-    ) {
-
-        document.getElementById("demographicError")
-            .style.display = "block";
-
-        return;
-
-    }
-
-
-    // Add demographics to master data
-
-    participantData.age =
-        age;
-    participantData.gender =
-        gender.value;
-     participantData.Education =
-        Education.value;
-    participantData.MonthlyIncome =
-        MonthlyIncome;
-
-
-    console.log(
-        "Participant Data:",
-        participantData
-    );
-
-
-    // Move to Personality
-
-    document.getElementById("demographicPage")
-        .classList.remove("active");
-
-    document.getElementById("personalityPage")
-        .classList.add("active");
-
-}
+        const scriptURL =
         
-        function savePersonality() {
+        "https://script.google.com/macros/s/AKfycbz5OoVEHAjVII9zmyB3FCcqE6c6A2kPOM5vSJtKGh5kxPXEqZ4Vv4M9EzPnSaGnVR5NPg/exec";
+         let currentActivePage = "consentPage";
+         let participantData = {
+         participantID: null,
+         email: null,
+         age: null,
+         gender: null,
+        Education: null,
+        MonthlyIncome: null,
+        Condition: null,
+        MVS_1: null, MVS_2: null, MVS_3: null, MVS_4: null, MVS_5: null, MVS_6: null, MVS_7: null, MVS_8: null, MVS_9: null,
+        E1_Q1: null, E1_Q2: null, E1_Q3: null, E1_Q4: null, E1_Q5: null, E1_Q6: null, E1_Q7: null, E1_Q8: null, E1_Q9: null, E1_Q10: null, E1_Q11: null, E1_Q12: null,
+        E2_Q1: null, E2_Q2: null, E2_Q3: null, E2_Q4: null, E2_Q5: null, E2_Q6: null, E2_Q7: null, E2_Q8: null, E2_Q9: null, E2_Q10: null, E2_Q11: null, E2_Q12: null,
+        S_Q1: null,
+        consent: false,
+        isComplete: false,
+        lastUpdated: new Date().toISOString()
+         };
 
-    const MVS_1 =
-        document.querySelector('input[name="MVS_1"]:checked');
-    const MVS_2 =
-        document.querySelector('input[name="MVS_2"]:checked');
-    const MVS_3 =
-        document.querySelector('input[name="MVS_3"]:checked');
-    const MVS_4 =
-        document.querySelector('input[name="MVS_4"]:checked');
-    const MVS_5 =
-        document.querySelector('input[name="MVS_5"]:checked');
-    const MVS_6 =
-        document.querySelector('input[name="MVS_6"]:checked');
-    const MVS_7 =
-        document.querySelector('input[name="MVS_7"]:checked');
-    const MVS_8 =
-        document.querySelector('input[name="MVS_8"]:checked');
-    const MVS_9 =
-        document.querySelector('input[name="MVS_9"]:checked');
+         function saveProgress(syncToSheet = true) {
+        participantData.lastUpdated = new Date().toISOString();
+        const payload = {
+            data: participantData,
+            activePage: currentActivePage
+        };
+        localStorage.setItem("vr_study_data", JSON.stringify(payload));
 
+        if (syncToSheet && participantData.participantID) {
+            sendPartialDataToSheet(participantData);
+        }
+    }
+    // Attach live event listeners so every click/type saves to localStorage instantly
+    function bindLiveAutoSave() {
+        document.addEventListener("change", (e) => {
+            const target = e.target;
+            if (!target) return;
 
-    if (
-        MVS_1 === null ||
-        MVS_2 === null ||
-        MVS_3 === null ||
-        MVS_4 === null ||
-        MVS_5 === null ||
-        MVS_6 === null ||
-        MVS_7 === null ||
-        MVS_8 === null ||
-        MVS_9 === null
-    ) {
+            if (target.id === "consent") {
+                participantData.consent = target.checked;
+            } else if (target.name) { 
+                // Handles all radio buttons (gender, MVS_1-3, E1_Q1-3, E2_Q1-3, S_Q1, S_Q21-23)
+                participantData[target.name] = target.value;
+            } else if (target.id) { 
+                // Handles dropdowns like MonthlyIncome and text inputs
+                participantData[target.id] = target.value;
+            }
+            saveProgress(false); // Instant local save without triggering network requests
+        });
 
-        document.getElementById("personalityError")
-            .style.display = "block";
-
-        return;
+        document.addEventListener("input", (e) => {
+            const target = e.target;
+            if (!target) return;
+            if (target.id && (target.type === "text" || target.type === "number" || target.type === "email")) {
+                participantData[target.id] = target.value;
+                saveProgress(false);
+            }
+        });
+    }
+    // Background sync function for partial/step-by-step saves
+    function sendPartialDataToSheet(data) {
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain" }, // text/plain prevents CORS preflight issues with Google Apps Script
+            body: JSON.stringify(data)
+        }).catch(err => console.log("Background sync error (retry later):", err));
     }
 
-// Add personality responses
-    // to the master participant data
-     participantData.MVS_1 =
-        MVS_1.value;
-    participantData.MVS_2 =
-        MVS_2.value;
-    participantData.MVS_3 =
-        MVS_3.value;
-    participantData.MVS_4 =
-        MVS_4.value;
-    participantData.MVS_5 =
-        MVS_5.value;
-    participantData.MVS_6 =
-        MVS_6.value;
-    participantData.MVS_7 =
-        MVS_7.value;
-    participantData.MVS_8 =
-        MVS_8.value;
-    participantData.MVS_9 =
-        MVS_9.value;
-   // =====================================
-    // COUNTERBALANCING
-    // =====================================
+    function switchPage(fromId, toId) {
+        document.getElementById(fromId).classList.remove("active");
+        document.getElementById(toId).classList.add("active");
+        currentActivePage = toId;
+        saveProgress(true);
+    }
+ function goToParticipantInfo() {
+        if (!document.getElementById("consent").checked) {
+            document.getElementById("consentError").style.display = "block";
+            return;
+        }
+        switchPage("consentPage", "participantInfoPage");
+    }
 
-    const participantNumber =
-        parseInt(participantData.participantID, 10);
+    function saveParticipantInfo() {
+        const id = document.getElementById("participantID").value.trim();
+        const email = document.getElementById("email").value.trim();
+        if (!id || !email || isNaN(parseInt(id, 10))) {
+            document.getElementById("participantInfoError").style.display = "block";
+            return;
+        }
+        document.getElementById("participantInfoError").style.display = "none";
 
+        participantData.participantID = id;
+        participantData.email = email;
 
-    if (isNaN(participantNumber)) {
+        switchPage("participantInfoPage", "demographicPage");
+    }
 
-        alert("Please use a numeric Participant ID.");
+         function saveDemographics() {
+        const age = document.getElementById("age").value;
+        const gender = document.querySelector('input[name="gender"]:checked');
+        const Education = document.querySelector('input[name="Education"]:checked');
+        const income = document.getElementById("MonthlyIncome").value;
 
-        return;
+        if (!age || !gender || !Education || !income) {
+            document.getElementById("demographicError").style.display = "block";
+            return;
+        }
+        participantData.age = age;
+        participantData.gender = gender.value;
+        participantData.Education = Education.value;
+        participantData.MonthlyIncome = income;
+        switchPage("demographicPage", "personalityPage");
+    }
+
+function savePersonality() {
+        const mvs1 = document.querySelector('input[name="MVS_1"]:checked');
+        const mvs2 = document.querySelector('input[name="MVS_2"]:checked');
+        const mvs3 = document.querySelector('input[name="MVS_3"]:checked');
+        const mvs4 = document.querySelector('input[name="MVS_4"]:checked');
+        const mvs5 = document.querySelector('input[name="MVS_5"]:checked');
+        const mvs6 = document.querySelector('input[name="MVS_6"]:checked');
+        const mvs7 = document.querySelector('input[name="MVS_7"]:checked');
+        const mvs8 = document.querySelector('input[name="MVS_8"]:checked');
+        const mvs9 = document.querySelector('input[name="MVS_9"]:checked');
+
+        if (!mvs1 || !mvs2 || !mvs3 || !mvs4 || !mvs5 || !mvs6 || ! mvs7 || !mvs8 || !mvs9) {
+            document.getElementById("personalityError").style.display = "block";
+            return;
+        }
+        document.getElementById("personalityError").style.display = "none";
+        participantData.MVS_1 = mvs1.value;
+        participantData.MVS_2 = mvs2.value;
+        participantData.MVS_3 = mvs3.value;
+        participantData.MVS_4 = mvs4.value;
+        participantData.MVS_5 = mvs5.value;
+        participantData.MVS_6 = mvs6.value;
+        participantData.MVS_7 = mvs7.value;
+        participantData.MVS_8 = mvs8.value;
+        participantData.MVS_9 = mvs9.value;
+
+        // Counterbalancing Routing
+        const pNum = parseInt(participantData.participantID, 10);
+        participantData.Condition = (pNum % 2 === 1) ? "A" : "B";
+
+        if (participantData.Condition === "A") {
+            switchPage("personalityPage", "experiencePage");
+        } else {
+            switchPage("personalityPage", "experience2Page");
+        }
     }
 
 
-    // Odd ID = Condition A
-    // Even ID = Condition B
-
-    if (participantNumber % 2 === 1) {
-
-        participantData.Condition = "A";
-
-    } else {
-
-        participantData.Condition = "B";
-    }
-
-
-    console.log(
-        "Counterbalancing Condition:",
-        participantData.Condition
-    );
-
-
-    // Hide personality page
-    document.getElementById("personalityPage")
-        .classList.remove("active");
-
-
-    // Start the appropriate first experience
-
-    if (participantData.Condition === "A") {
-
-        document.getElementById("experiencePage")
-            .classList.add("active");
-
-    } else {
-
-        document.getElementById("experience2Page")
-            .classList.add("active");
-    }
-}
-       
+     
     function startExternalExperience() {
 
     const experienceURL =
@@ -3497,91 +3367,36 @@ function saveExperience1Responses() {
         document.querySelector(
             'input[name="E1_Q12"]:checked'
         );
-   
-    if (
-        e1q1 === null ||
-        e1q2 === null ||
-        e1q3 === null ||
-        e1q4 === null ||
-        e1q5 === null ||
-        e1q6 === null ||
-        e1q7 === null ||
-        e1q8 === null ||
-        e1q9 === null ||
-        e1q10 === null ||
-        e1q11 === null ||
-        e1q12 === null 
-    ) {
+   if (!e1q1 || !e1q2|| !e1q3 || !e1q4|| !e1q5 || !e1q6|| !e1q7 || !e1q8|| !e1q9 || !e1q10|| !e1q11 || !e1q12) {
+            document.getElementById("experience1Error").style.display = "block";
+            return;
+        }
+        document.getElementById("experience1Error").style.display = "none";
+    
+   // Save Experience 1 responses
 
-        document.getElementById("experience1Error")
-            .style.display = "block";
-
-        return;
-
-    }
-// Save Experience 1 responses
-
-    participantData.E1_Q1 =
-        e1q1.value;
-
-    participantData.E1_Q2 =
-        e1q2.value;
-    participantData.E1_Q3 =
-        e1q3.value;
-
-    participantData.E1_Q4 =
-        e1q4.value;
-    participantData.E1_Q5 =
-        e1q5.value;
-
-    participantData.E1_Q6 =
-        e1q6.value;
-    participantData.E1_Q7 =
-        e1q7.value;
-
-    participantData.E1_Q8 =
-        e1q8.value;
-    participantData.E1_Q9 =
-        e1q9.value;
-
-    participantData.E1_Q10 =
-        e1q10.value;
-    participantData.E1_Q11 =
-        e1q11.value;
-
-    participantData.E1_Q12 =
-        e1q12.value;
-
-    console.log(
-        "Participant Data after Experience 1:",
-        participantData
-    );
-
-
+    participantData.E1_Q1 = e1q1.value;
+    participantData.E1_Q2 = e1q2.value;
+    participantData.E1_Q3 = e1q3.value;
+    participantData.E1_Q4 = e1q4.value;
+    participantData.E1_Q5 = e1q5.value;
+    participantData.E1_Q6 = e1q6.value;
+    participantData.E1_Q7 = e1q7.value;
+    participantData.E1_Q8 = e1q8.value;
+    participantData.E1_Q9 = e1q9.value;
+    participantData.E1_Q10 = e1q10.value;
+    participantData.E1_Q11 = e1q11.value;
+    participantData.E1_Q12 = e1q12.value;
     // Move to the next stage based on counterbalancing condition
 
-document.getElementById("experience1ResponsePage")
-    .classList.remove("active");
-
-if (participantData.Condition === "A") {
-
-    // Condition A:
-    // Experience 1 → Experience 2
-
-    document.getElementById("experience2Page")
-        .classList.add("active");
-
-} else {
-
-    // Condition B:
-    // Experience 2 → Experience 1
-
-    document.getElementById("spatialPage")
-        .classList.add("active");
-
-}
-}
-    
+// Counterbalanced Next Step
+        if (participantData.Condition === "A") {
+            switchPage("experience1ResponsePage", "experience2Page");
+        } else {
+            switchPage("experience1ResponsePage", "scenario1Page");
+        }
+    }
+       
 // =====================================
 // OPEN EXPERIENCE 2
 // =====================================
@@ -3606,19 +3421,12 @@ function startExternalExperience2(gender) {
         .style.display = "inline-block";
 
 }
-// =====================================
-// EXPERIENCE 2 COMPLETED
-// =====================================
+
 
 function experience2Completed() {
 
-    document.getElementById("experience2Page")
-        .classList.remove("active");
-
-    document.getElementById("experience2ResponsePage")
-        .classList.add("active");
-
-}
+     switchPage("experience2Page", "experience2ResponsePage");
+    }
 // =====================================
 // SAVE EXPERIENCE 2 RESPONSES
 // =====================================
@@ -3676,29 +3484,13 @@ function saveExperience2Responses() {
             'input[name="E2_Q12"]:checked'
         );
 
-
-    if (
-        e2q1 === null ||
-        e2q2 === null ||
-        e2q3 === null ||
-        e2q4 === null ||
-        e2q5 === null ||
-        e2q6 === null ||
-        e2q7 === null ||
-        e2q8 === null ||
-        e2q9 === null ||
-        e2q10 === null ||
-        e2q11 === null ||
-       e2q12 === null 
-    ) {
-
-        document.getElementById("experience2Error")
-            .style.display = "block";
-
-        return;
-
-    }
-// Save Experience 2 responses
+ if (!e2q1 || !e2q2 || !e2q3 || !e2q4 || !e2q5 || !e2q6 || !e2q7 || !e2q8 || !e2q9 || !e2q10 || !e2q11 || !e2q12) {
+            document.getElementById("experience2Error").style.display = "block";
+            return;
+        }
+        document.getElementById("experience2Error").style.display = "none";
+    
+    // Save Experience 2 responses
 
     participantData.E2_Q1 =
         e2q1.value;
@@ -3742,30 +3534,15 @@ function saveExperience2Responses() {
     );
 
 
-   // Move to the next stage based on counterbalancing condition
+  // Counterbalanced Next Step
+        if (participantData.Condition === "B") {
+            switchPage("experience2ResponsePage", "experiencePage");
+        } else {
+            switchPage("experience2ResponsePage", "scenario1Page");
+        }
+    }
+    
 
-document.getElementById("experience2ResponsePage")
-    .classList.remove("active");
-
-if (participantData.Condition === "A") {
-
-    // Condition A:
-    // Experience 2 was the second experience
-
-    document.getElementById("spatialPage")
-        .classList.add("active");
-
-} else {
-
-    // Condition B:
-    // Experience 2 was the first experience
-    // Now present Experience 1
-
-    document.getElementById("experiencePage")
-        .classList.add("active");
-
-}
-}
 // =====================================
 // SPATIAL DATA
 // =====================================
@@ -4097,120 +3874,127 @@ function finishSpatialTask() {
 
 function submitStudy() {
 
-    const q1 =
-        document.querySelector(
-            'input[name="S_Q1"]:checked'
-        );
+     const sq1 = document.querySelector('input[name="S_Q1"]:checked');
 
+    if (!sq1) {
+            document.getElementById("scenario1Error").style.display = "block";
+            return;
+        }
+        document.getElementById("scenario1Error").style.display = "none";
 
-    // Check scenario questions
+    participantData.S_Q21 = sq21.value;
+    participantData.isComplete = true;
 
-    if (
-        q1 === null 
-    ) {
+    if (localStorage.getItem("submitted_" + participantData.participantID)) {
+            alert("This Participant ID has already submitted responses.");
+            return;
+        }
 
-        document.getElementById("scenarioError")
-            .style.display = "block";
-
-        return;
-
-    }
-
-    // =====================================
-    // 1. DISABLE BUTTON RIGHT AFTER VALIDATION
-    // =====================================
-    const btn = document.getElementById("submitBtn");
-    if (btn) {
+        const btn = document.getElementById("submitBtn");
         btn.disabled = true;
         btn.innerText = "Submitting...";
+
+        sendDataWithRetry(participantData);
     }
-    // Save scenario responses
 
-    participantData.S_Q1 =
-        q1.value;
-
-    
-
-
-    // =====================================
-    // GOOGLE APPS SCRIPT URL
-    // =====================================
-
-    const scriptURL =
-        
-        "https://script.google.com/macros/s/AKfycbz5OoVEHAjVII9zmyB3FCcqE6c6A2kPOM5vSJtKGh5kxPXEqZ4Vv4M9EzPnSaGnVR5NPg/exec";
-
-    // =====================================
-    // SEND DATA TO GOOGLE SHEETS
-    // =====================================
-
-    // =====================================
-    // SEND DATA TO GOOGLE SHEETS
-    // =====================================
-    fetch(
-        scriptURL,
-        {
+    function sendDataWithRetry(payload, maxRetries = 5, delay = 3000) {
+        saveProgress(false);
+        fetch(SCRIPT_URL, {
             method: "POST",
-            body: JSON.stringify(participantData),
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            localStorage.setItem("submitted_" + payload.participantID, "true");
+            localStorage.removeItem("vr_study_data");
+            alert("Study successfully submitted!");
+        })
+        .catch((err) => {
+            if (maxRetries > 0) {
+                setTimeout(() => sendDataWithRetry(payload, maxRetries - 1, delay * 1.5), delay);
+            } else {
+                alert("Network error. Your responses remain saved on your device and will sync automatically when back online.");
             }
-        }
-    )
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function(result) {
-        console.log("Google Sheets response:", result);
+        });
+    }
 
-        if (result.status === "success") {
-            // =====================================
-            // 2. LEAVE DISABLED ON SUCCESS
-            // =====================================
-            if (btn) {
-                btn.innerText = "Submitted";
+    // On page reload: Restore stored data into all form controls and open active page
+    function restoreProgress() {
+        const savedRaw = localStorage.getItem("vr_study_data");
+        if (!savedRaw) return;
+
+        try {
+            const parsed = JSON.parse(savedRaw);
+            if (parsed.data) {
+                participantData = { ...participantData, ...parsed.data };
             }
-
-            alert(
-                "Thank you for participating. " +
-                "Your responses have been successfully recorded."
-            );
-
-        } else {
-            // =====================================
-            // 3. RE-ENABLE IF SERVER RETURNS ERROR
-            // =====================================
-            if (btn) {
-                btn.disabled = false;
-                btn.innerText = "Submit Study";
+            if (parsed.activePage) {
+                currentActivePage = parsed.activePage;
             }
 
-            alert(
-                "There was a problem submitting your responses. " +
-                "Please contact the researcher."
-            );
-        }
-    })
-    .catch(function(error) {
-        console.error("Submission error:", error);
+            // 1. Restore Checkbox
+            const consentElem = document.getElementById("consent");
+            if (consentElem && participantData.consent) {
+                consentElem.checked = true;
+            }
 
-        // =====================================
-        // 4. RE-ENABLE IF NETWORK/FETCH FAILS
-        // =====================================
-        if (btn) {
-            btn.disabled = false;
-            btn.innerText = "Submit Study";
-        }
+            // 2. Restore Text, Email, Number, and Dropdown Inputs by ID
+            ["participantID", "email", "age", "MonthlyIncome"].forEach(id => {
+                const elem = document.getElementById(id);
+                if (elem && participantData[id] !== undefined && participantData[id] !== null) {
+                    elem.value = participantData[id];
+                }
+            });
 
-        alert(
-            "There was a problem submitting your responses. " +
-            "Please contact the researcher."
-        );
+            // 3. Restore all Radio Buttons by Name
+            const radioFields = [
+                "gender", "Education", "MVS_1", "MVS_2", "MVS_3", "MVS_4", "MVS_5", "MVS_6", "MVS_7", "MVS_8", "MVS_9",
+                "E1_Q1", "E1_Q2", "E1_Q3", "E1_Q4", "E1_Q5", "E1_Q6", "E1_Q7", "E1_Q8", "E1_Q9", "E1_Q10", "E1_Q11", "E1_Q12",
+                "E2_Q1", "E2_Q2", "E2_Q3", "E2_Q4", "E2_Q5", "E2_Q6", "E2_Q7", "E2_Q8", "E2_Q9", "E2_Q10", "E2_Q11", "E2_Q12",
+                "S_Q1"
+            ];
+
+            radioFields.forEach(field => {
+                const val = participantData[field];
+                if (val !== undefined && val !== null && val !== "") {
+                    const radio = document.querySelector(`input[name="${field}"][value="${val}"]`);
+                    if (radio) radio.checked = true;
+                }
+            });
+
+            // 4. Navigate back to where the user left off
+            if (currentActivePage && document.getElementById(currentActivePage)) {
+                document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+                document.getElementById(currentActivePage).classList.add("active");
+            }
+        } catch (e) {
+            console.error("Error restoring state:", e);
+        }
+    }
+
+    // Initialize listeners and restore state when page loads
+    window.addEventListener("DOMContentLoaded", () => {
+        restoreProgress();
+        bindLiveAutoSave();
     });
-}
 
+    // Auto-sync offline data when internet connection is restored
+    window.addEventListener("online", () => {
+        const savedRaw = localStorage.getItem("vr_study_data");
+        if (savedRaw) {
+            try {
+                const parsed = JSON.parse(savedRaw);
+                const data = parsed.data || parsed;
+                if (data.participantID && !localStorage.getItem("submitted_" + data.participantID)) {
+                    sendPartialDataToSheet(data);
+                }
+            } catch(e) {}
+        }
+    });
 </script>
-
 </body>
-
 </html>
+
+   
+   
