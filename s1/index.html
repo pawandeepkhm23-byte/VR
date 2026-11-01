@@ -1,237 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VR Shopping Study</title>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 30px; }
+    .container { max-width: 800px; margin: auto; background-color: white; padding: 35px; border-radius: 10px; }
+    h1 { text-align: center; }
+    h2 { margin-top: 25px; }
+    p { line-height: 1.6; }
+    label { display: inline-block; margin-top: 15px; margin-bottom: 5px; }
+    input, select { padding: 10px; font-size: 16px; width: 100%; box-sizing: border-box; }
+    .consent-box { background-color: #f0f0f0; padding: 20px; margin-top: 20px; margin-bottom: 20px; }
+    .consent-box label { margin-top: 0; }
+    .radio-option { display: block; margin: 8px 0; }
+    .radio-option input, .consent-box input { width: auto; }
+    button { margin-top: 25px; padding: 12px 25px; font-size: 16px; cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: 0.6; }
+    .error { color: red; display: none; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .question { margin-top: 30px; padding: 20px; background-color: #f8f8f8; border-radius: 8px; }
+    .scale { display: flex; justify-content: space-between; margin-top: 15px; gap: 4px; }
+    .scale-option { text-align: center; flex: 1; font-size: 14px; }
+    .scale-option input { width: auto; }
+    .scale-option p { margin: 4px 0 0; font-size: 12px; line-height: 1.3; }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>VR Shopping Study</title>
-
-    <style>
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 30px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background-color: white;
-            padding: 35px;
-            border-radius: 10px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        h2 {
-            margin-top: 25px;
-        }
-
-        p {
-            line-height: 1.6;
-        }
-
-        label {
-            display: inline-block;
-            margin-top: 15px;
-            margin-bottom: 5px;
-        }
-
-        input,
-        select {
-            padding: 10px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .consent-box {
-            background-color: #f0f0f0;
-            padding: 20px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        .radio-option {
-            display: block;
-            margin: 8px 0;
-        }
-
-        .radio-option input {
-            width: auto;
-        }
-
-        button {
-            margin-top: 25px;
-            padding: 12px 25px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .error {
-            color: red;
-            display: none;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-        .question {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-radius: 8px;
-}
-
-.scale {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-}
-
-.scale-option {
-    text-align: center;
-}
-
-.scale-option input {
-    width: auto;
-}
-
-/* ============================= */
-/* SPATIAL TASK */
-/* ============================= */
-
-.spatial-canvas {
-    width: 100%;
-    max-width: 700px;
-    height: 400px;
-
-    margin: 30px auto;
-
-    border: 2px solid #333;
-    background-color: #ffffff;
-
-    position: relative;
-
-    cursor: crosshair;
-
-    box-sizing: border-box;
-
-    /* Important for smartphones */
-    touch-action: none;
-}
-
-
-/* SELF circle */
-
-.self-circle {
-    width: 100px;
-    height: 100px;
-
-    border: 3px solid #333;
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-weight: bold;
-    font-size: 16px;
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    transform: translate(-50%, -50%);
-
-    background-color: white;
-
-    z-index: 2;
-
-    box-sizing: border-box;
-
-    /* Important: allow clicks to pass through SELF */
-    pointer-events: none;
-}
-
-
-/* Participant's click */
-
-.spatial-click {
-    width: 24px;
-    height: 24px;
-
-    border-radius: 50%;
-
-    position: absolute;
-
-    transform: translate(-50%, -50%);
-
-    background-color: black;
-
-    z-index: 3;
-
-    pointer-events: none;
-}
-
-
-/* Smartphone */
-
-@media (max-width: 600px) {
-
+    /* SPATIAL TASK */
     .spatial-canvas {
-        height: 400px;
+        width: 100%; max-width: 700px; height: 400px; margin: 30px auto;
+        border: 2px solid #333; background-color: #ffffff; position: relative;
+        cursor: crosshair; box-sizing: border-box; touch-action: none;
     }
-
     .self-circle {
-        width: 100px;
-        height: 100px;
+        width: 100px; height: 100px; border: 3px solid #333; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold; font-size: 16px; position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%); background-color: white; z-index: 2;
+        box-sizing: border-box; pointer-events: none;
     }
-
-}
-
-    </style>
-
+    .spatial-click {
+        width: 24px; height: 24px; border-radius: 50%; position: absolute;
+        transform: translate(-50%, -50%); background-color: black; z-index: 3; pointer-events: none;
+    }
+    @media (max-width: 600px) {
+        body { padding: 12px; }
+        .container { padding: 20px; }
+        .scale-option { font-size: 12px; }
+        .scale-option p { font-size: 10px; }
+    }
+</style>
 </head>
 
-
 <body>
-
 <div class="container">
 
-
-       <!-- ========================= -->
-    <!-- CONSENT PAGE -->
-    <!-- ========================= -->
+    <!-- ========================= CONSENT ========================= -->
     <div id="consentPage" class="page active">
         <h1>Research Study</h1>
         <h2>Information about the Study</h2>
         <p>
-            You are invited to participate in a research study
-            examining consumer responses to virtual experiences.
+            You are invited to participate in a research study examining consumer responses to virtual experiences.
             Your participation will involve a few demographic details about yourself, following your consent,
-            exposure to virtual experiences, and post-experience responses. Your experience session 
+            exposure to virtual experiences, and post-experience responses. Your experience session
             may be recorded for an evident purpose.
         </p>
-        <p>
-            Your participation is voluntary. You may stop participating
-            at any time.
-        </p>
-        <p> Principal Investigator: Pawandeep Kaur </p>
-        <p> Supervisor: Dr Gyan Prakash </p>
-        <p> Department of Humanities and Management
-            Dr B. R. Ambedkar National Institute of Technology, Jalandhar </p>
+        <p>Your participation is voluntary. You may stop participating at any time.</p>
+        <p>Principal Investigator: Pawandeep Kaur</p>
+        <p>Supervisor: Dr Gyan Prakash</p>
+        <p>Department of Humanities and Management,
+           Dr B. R. Ambedkar National Institute of Technology, Jalandhar</p>
 
         <div class="consent-box">
             <h3>Consent</h3>
@@ -241,3760 +80,703 @@
             </label>
         </div>
 
-        <p class="error" id="consentError" style="display: none;">
-            Please provide your consent before continuing.
-        </p>
-         
-        <button onclick="goToDemographics()">
-    Continue
-</button>
-
-        
+        <p class="error" id="consentError">Please provide your consent before continuing.</p>
+        <button onclick="goToParticipantInfo()">Continue</button>
     </div>
-    
- <!-- ========================= -->
-<!-- PARTICIPANT INFORMATION PAGE -->
-<!-- ========================= -->
 
-<div id="participantInfoPage" class="page">
+    <!-- ========================= PARTICIPANT INFO ========================= -->
+    <div id="participantInfoPage" class="page">
+        <h1>Participant Information</h1>
+        <p>Please enter participant information below.</p>
 
-    <h1>Participant Information</h1>
+        <label for="participantID">Participant ID</label>
+        <input type="text" id="participantID" placeholder="Enter your Participant ID (number)">
 
-    <p>
-        Please enter participant information below.
-    </p>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email">
 
-    <label for="participantID">
-        Participant ID
-    </label>
+        <p class="error" id="participantInfoError">Please enter a numeric Participant ID and a valid email.</p>
+        <button onclick="saveParticipantInfo()">Continue</button>
+    </div>
 
-    <input
-        type="text"
-        id="participantID"
-        placeholder="Enter your Participant ID"
-    >
-
-    <label for="email">
-        Email
-    </label>
-
-    <input
-        type="email"
-        id="email"
-        placeholder="Enter your email"
-    >
-
-    <p
-        class="error"
-        id="participantInfoError"
-        style="display: none;"
-    >
-        Please enter your Participant ID and email.
-    </p>
-
-    <button onclick="saveParticipantInfo()">
-        Continue
-    </button>
-
-</div>
-
-    <!-- ========================= -->
-    <!-- DEMOGRAPHICS PAGE -->
-    <!-- ========================= -->
+    <!-- ========================= DEMOGRAPHICS ========================= -->
     <div id="demographicPage" class="page">
         <h1>About You</h1>
-        <p>
-            Please provide the following information.
-        </p>
-    
-        <!-- Age -->
+        <p>Please provide the following information.</p>
 
-        <label for="age">
+        <label for="age">Age</label>
+        <input type="number" id="age" min="18" max="100" placeholder="Enter your age">
 
-            Age
+        <label>Gender</label>
+        <div class="radio-option"><input type="radio" name="gender" value="Male"> Male</div>
+        <div class="radio-option"><input type="radio" name="gender" value="Female"> Female</div>
 
-        </label>
+        <label>Education</label>
+        <div class="radio-option"><input type="radio" name="Education" value="Secondary school"> Secondary school</div>
+        <div class="radio-option"><input type="radio" name="Education" value="Bachelor"> Bachelor</div>
+        <div class="radio-option"><input type="radio" name="Education" value="Master"> Master</div>
+        <div class="radio-option"><input type="radio" name="Education" value="PhD"> PhD</div>
 
-        <input
-            type="number"
-            id="age"
-            min="18"
-            max="100"
-            placeholder="Enter your age"
-        >
-
-
-
-        <!-- Gender -->
-
-        <label>
-
-            Gender
-
-        </label>
-
-        <div class="radio-option">
-
-            <input
-                type="radio"
-                name="gender"
-                value="Male"
-            >
-
-            Male
-
-        </div>
-
-
-        <div class="radio-option">
-
-            <input
-                type="radio"
-                name="gender"
-                value="Female"
-            >
-
-            Female
-
-        </div>
-        <!-- Education -->
-
-        <label>
-
-            Education
-
-        </label>
-
-        <div class="radio-option">
-
-            <input
-                type="radio"
-                name="Education"
-                value="Secondary school"
-            >
-
-           Secondary school
-
-        </div>
-
-
-        <div class="radio-option">
-
-            <input
-                type="radio"
-                name="Education"
-                value="Bachelor"
-            >
-
-            Bachelor
-
-        </div>
-
-
-        <div class="radio-option">
-
-            <input
-                type="radio"
-                name="Education"
-                value="Master"
-            >
-
-            Master
-
-        </div>
-
-
-        <div class="radio-option">
-
-            <input
-                type="radio"
-                name="Education"
-                value="PhD"
-            >
-
-            PhD
-
-        </div>
-
-
-
-        <!-- Monthly Family Income -->
-
-        <label for="Income">
-
-            Monthly Family Income
-
-        </label>
-
-
+        <label for="MonthlyIncome">Monthly Family Income</label>
         <select id="MonthlyIncome">
-
-            <option value="">
-
-                Select an option
-
-            </option>
-
-            <option value="Below 30000">
-
-                Below 30000
-
-            </option>
-
-            <option value="30000-60000">
-
-                30000-60000
-
-            </option>
-
-            <option value="60000-150000">
-
-                60000-150000
-
-            </option>
-
-            <option value="Above 150000">
-
-                Above 150000
-
-            </option>
-
+            <option value="">Select an option</option>
+            <option value="Below 30000">Below 30000</option>
+            <option value="30000-60000">30000-60000</option>
+            <option value="60000-150000">60000-150000</option>
+            <option value="Above 150000">Above 150000</option>
         </select>
 
+        <p class="error" id="demographicError">Please complete the required information (age must be 18-100).</p>
+        <button onclick="saveDemographics()">Continue</button>
+    </div>
 
+    <!-- ========================= PERSONALITY (MVS) ========================= -->
+    <div id="personalityPage" class="page">
+        <p>Please indicate how much you agree or disagree with each statement.</p>
+        <div id="personalityItems"></div>
+        <p class="error" id="personalityError">Please answer all nine statements.</p>
+        <button onclick="savePersonality()">Continue</button>
+    </div>
 
-        <p class="error" id="demographicError">
+    <!-- ========================= EXPERIENCE 1 (TOURISM) ========================= -->
+    <div id="experiencePage" class="page">
+        <h1>Virtual Experience 1</h1>
+        <h2>Instructions</h2>
+        <p>Virtual experience 1 involves experiencing a virtual destination using an HMD (Head-mounted device).</p>
+        <p><strong>Please get the HMD from the study investigator</strong> to have the experience.
+           After experiencing, return to this tab to continue the study.</p>
 
-            Please complete the required information.
+        <div class="consent-box">
+            <p><strong>Do not close this study tab.</strong></p>
+        </div>
 
+        <button onclick="startExternalExperience()">Start Experience</button>
+
+        <p id="experienceMessage" style="display:none; margin-top:20px;">
+            After exploring the virtual destination, return to this tab and click
+            "I have completed the virtual tourism experience".
         </p>
 
-
-        <button onclick="saveDemographics()">
-
-            Continue
-
+        <button id="completedButton" onclick="experienceCompleted()" style="display:none;">
+            I have completed the virtual tourism experience
         </button>
     </div>
-      
 
+    <!-- ========================= EXPERIENCE 1 RESPONSES ========================= -->
+    <div id="experience1ResponsePage" class="page">
+        <h1>Experience 1 (Virtual Tourism Experience)</h1>
+        <p>Please answer the following questions based on the experience you have just completed.</p>
+        <div id="e1Items"></div>
+        <p class="error" id="experience1Error">Please answer all questions before continuing.</p>
+        <button onclick="saveExperience1Responses()">Continue</button>
+    </div>
 
-<!-- ========================= -->
-<!-- PERSONALITY ITEMS -->
-<!-- ========================= -->
-
-<div id="personalityPage" class="page">
-
-
-    <p>
-        Please indicate how much you agree or disagree
-        with each statement.
-    </p>
-
-
-    <!-- ITEM 1 -->
-
-    <div class="question">
-
+    <!-- ========================= EXPERIENCE 2 ========================= -->
+    <div id="experience2Page" class="page">
+        <h1>Virtual Experience 2</h1>
+        <h2>Instructions</h2>
         <p>
-            <strong>
-            I like to own things that impress people. </strong>
-            
+            Virtual experience 2 involves trying on products virtually.<strong> Male </strong>
+            participants click on the <strong>Men's virtual try-on</strong>
+            and <strong>Female</strong> participants click on the <strong>Women's virtual try-on.</strong>
+            After exploring, return to this browser to continue the study.
         </p>
 
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_1"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_1"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_1"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_1"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_1"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
+        <div class="consent-box">
+            <p><strong>Do not close this study tab.</strong></p>
         </div>
 
-    </div>
+        <button onclick="startExternalExperience2('male')">Men's virtual try-on</button>
+        <button onclick="startExternalExperience2('female')">Women's virtual try-on</button>
 
-
-    <!-- ITEM 2 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-            These things I own say a lot about how well
-                I’m doing in life. </strong>
-            
+        <p id="experience2Message" style="display:none; margin-top:20px;">
+            The new tab has been opened. After exploring the virtual product, return to this tab and click
+            "I have completed virtual product experience".
         </p>
 
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_2"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_2"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_2"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_2"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_2"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ITEM 3 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-            I admire people who own expensive homes,
-                cars, and clothes.</strong>
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_3"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_3"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_3"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_3"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_3"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-    
-    
-    <!-- ITEM 4 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-            I try to keep my life simple, as far as possessions are concerned.</strong>
-           
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_4"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_4"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_4"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_4"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_4"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- ITEM 5 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-            Buying things gives me a lot of pleasure.</strong>
-           
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_5"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_5"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_5"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_5"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_5"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- ITEM 6 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-            I like a lot of luxury in my life.
-            </strong>
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_6"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_6"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_6"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_6"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_6"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- ITEM 7 -->
-
-    <div class="question">
-
-        <p>
-          <strong>
-            My life would be better if I owned certain things I don’t have.</strong>
-           
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_7"
-                    value="1">
-                1
-                <p> Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_7"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_7"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_7"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_7"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- ITEM 8 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-            I’d be happier if I could afford to buy more things.</strong>
-            
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_8"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_8"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_8"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_8"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_8"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- ITEM 9-->
-
-    <div class="question">
-
-        <p>
-          <strong>
-        It sometimes bothers me quite a bit that I can’t afford to buy all the things I’d like.</strong>
-            
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_9"
-                    value="1">
-                1
-                <p>Strongly disagree</p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_9"
-                    value="2">
-                2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_9"
-                    value="3">
-                3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_9"
-                    value="4">
-                4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="MVS_9"
-                    value="5">
-                5
-                <p>Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-    <p
-        class="error"
-        id="personalityError">
-
-        Please answer all three statements.
-
-    </p>
-     
-    <button onclick="savePersonality()">
-
-        Continue
-
-    </button>
-</div>
-
- <!-- ========================= -->
-<!-- EXTERNAL EXPERIENCE PAGE -->
-<!-- ========================= -->
-
-<div id="experiencePage" class="page">
-
-    <h1>Virtual Experience 1 </h1>
-
-    <h2>Instructions</h2>
-
-    <p>
-        Virtual experience 1 involves experiencing a virtual destination using an HMD (Head-mounted device).
-    </p>
-
-    <p>
-        <strong>Please get the HMD from the study investigator </strong> to have the experience. 
-        After experiencing, return to this tab to continue the study.
-    </p>
-
-    
-
-    <div class="consent-box">
-
-    
-        <p><strong>
-            Do not close this study tab. </strong>
-        </p>
-
-    </div>
-
-
-    <button onclick="startExternalExperience()">
-
-        Start Experience
-
-    </button>
-
-
-    <p
-        id="experienceMessage"
-        style="display:none; margin-top:20px;"
-    >
-
-        After exploring the virtual destination, return to this tab and click
-        "I have completed the virtual tourism experience".
-
-    </p>
-
-
-    <button
-        id="completedButton"
-        onclick="experienceCompleted()"
-        style="display:none;"
-    >
-
-        I have completed the virtual tourism experience
-
-    </button>
-
-</div>
-
-
-</div>
-<!-- ========================= -->
-<!-- EXPERIENCE 1 RESPONSES -->
-<!-- ========================= -->
-
-<div id="experience1ResponsePage" class="page">
-
-    <h1>Experience 1 (Virtual tourism Experience)</h1>
-
-    <p>
-        Please answer the following questions based on
-        your experience you have just completed.
-    </p>
-
-
-    <!-- QUESTION 1 -->
-
-    <div class="question">
-
-        <p>
-           <strong>
-                In the past two months, have you physically visited the place you just explored? </strong>
-          
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q1"
-                    value="Yes">
-                <br>Yes
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q1"
-                    value="No">
-                <br>No
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- QUESTION 2 -->
-
-    <div class="question">
-
-        <p>
-          <strong>
-                How familiar were you with the experience? </strong>
-          
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q2"
-                    value="1">
-                <br>1 
-                <p>
-                Not at all
-                </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q2"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q2"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q2"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q2"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q2"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q2"
-                    value="7">
-                <br>7 
-                <p>
-                Very familiar </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 3 -->
-
-    <div class="question">
-
-        <p>
-           <strong>
-                To what extent the virtual experience was about an experiential purchase (a purchase that is made 
-                with the intention to gain an experience)? </strong>
-         
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q3"
-                    value="1">
-                <br>1 
-                <p>
-                Not at all </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q3"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q3"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q3"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q3"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q3"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q3"
-                    value="7">
-                <br>7 
-                <p> 
-                very much </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 4 -->
-
-    <div class="question">
-
-        <p>
-                <strong>
-                To what extent the virtual experience was about a material purchase (a purchase that is made with the 
-                intention to gain a material possession)?
-                </strong>
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q4"
-                    value="1">
-                <br>1 
-                <p>
-                Not at all </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q4"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q4"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q4"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q4"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q4"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q4"
-                    value="7">
-                <br>7 
-                <p>
-                very much </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 5 -->
-
-    <div class="question">
-
-        <p><strong>
-               The virtual tourism experience makes my life better.</strong>
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q5"
-                    value="1">
-                <br>1 
-                <p>
-                Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q5"
-                    value="2">
-                <br> 2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q5"
-                    value="3">
-                <br> 3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q5"
-                    value="4">
-                <br> 4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q5"
-                    value="5">
-                <br> 5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q5"
-                    value="6">
-                <br> 6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q5"
-                    value="7">
-                <br>7 
-                <p>
-                Strongly agree </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 6 -->
-
-    <div class="question">
-
-        <p><strong>
-                The virtual tourism experience makes my life satisfying.</strong>
-        
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q6"
-                    value="1">
-                <br>1
-                <p> 
-                    Strongly disagree 
-                </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q6"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q6"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q6"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q6"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q6"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q6"
-                    value="7">
-                <br>7
-                <p>
-                    Strongly agree 
-                </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 7 -->
-
-    <div class="question">
-
-        <p>
-                 <strong>
-                The virtual tourism experience makes my life happier.</strong>
-    
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q7"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q7"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q7"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q7"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q7"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q7"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q7"
-                    value="7">
-                <br>7
-                <p> Strongly agree </p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 8 -->
-
-    <div class="question">
-
-        <p><strong>
-                The virtual tourism experience makes my life more optimistic. </strong>
-      
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q8"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q8"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q8"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q8"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q8"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q8"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q8"
-                    value="7">
-                <br>7
-                <p> Strongly agree </p>
-            </div>
-
-        </div>
-
-    </div>
-                <!-- QUESTION 9 -->
-
-    <div class="question">
-
-        <p> <strong>
-
-                The virtual tourism experience makes me think I am better.</strong>
-
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q9"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q9"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q9"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q9"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q9"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q9"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q9"
-                    value="7">
-                <br>7
-                <p> Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 10 -->
-
-    <div class="question">
-
-        <p>
-                <strong>
-                The virtual tourism experience makes me more confident.</strong>
-
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q10"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q10"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q10"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q10"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q10"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q10"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q10"
-                    value="7">
-                <br>7
-                <p> Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 11 -->
-
-    <div class="question">
-
-        <p>    <strong>
-               The virtual tourism experience makes me more positive about myself. </strong>
-
-
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q11"
-                    value="1">
-                <br>1
-                <p>Strongly disagree  </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q11"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q11"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q11"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q11"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q11"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q11"
-                    value="7">
-                <br>7
-                <p> Strongly agree </p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 12 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-               The virtual tourism experience brings me closer to my ideal self.</strong>
-
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q12"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q12"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q12"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q12"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q12"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q12"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E1_Q12"
-                    value="7">
-                <br>7
-                <p> Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-
-    <p
-        class="error"
-        id="experience1Error">
-
-        Please answer all questions before continuing.
-
-    </p>
-
-
-    <button onclick="saveExperience1Responses()">
-
-        Continue
-
-    </button>
-
-</div>
-<!-- ========================= -->
-<!-- EXPERIENCE 2 PAGE -->
-<!-- ========================= -->
-
-<div id="experience2Page" class="page">
-
-    <h1>Virtual Experience 2</h1>
-
-    <h2>Instructions</h2>
-
-    <p>
-        Virtual experience 2 involves trying on products virtually.<strong> Male </strong>
-        participants click on the <strong> Men's virtual try-on </strong> 
-        and <strong>Female</strong> participants click on the <strong>Women's virtual try-on.</strong> 
-        After exploring the same return to this browser to continue the study.
-    </p>
-
-
-    <div class="consent-box">
-
-        <p>
-            <strong>
-                Do not close this study tab.
-            </strong>
-        </p>
-
-    </div>
-
-    <button onclick="startExternalExperience2('male')">
-
-        Men's virtual try-on
-
-    </button>
-    <button onclick="startExternalExperience2('female')">
-
-        Women's virtual try-on
-
-    </button>
-
-    <p
-        id="experience2Message"
-        style="display:none; margin-top:20px;"
-    >
-
-        The new tab has been opened.
-        After exploring the virtual product, return to this tab and click
-        "I have completed virtual product experience".
-
-    </p>
-
-    <button
-        id="completedButton2"
-        onclick="experience2Completed()"
-        style="display:none;"
-    >
-
-        I have completed virtual product experience
-
-    </button>
-
-</div>
-<!-- ========================= -->
-<!-- EXPERIENCE 2 RESPONSES -->
-<!-- ========================= -->
-
-<div id="experience2ResponsePage" class="page">
-
-    <h1>Experience 2 (Virtual Product experience)</h1>
-
-    <p>
-        Please answer the following questions based on
-        the virtual experience you have just completed.
-    </p>
-
-    <!-- QUESTION 1 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-                In the past two months, have you purchased the product you just explored? </strong>
-            
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q1"
-                    value="Yes">
-                <br>Yes
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q1"
-                    value="No">
-                <br>No
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- QUESTION 2 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-                How familiar were you with the experience? </strong>
-           
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q2"
-                    value="1">
-                <br>1 
-                <p>
-                Not at all 
-                </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q2"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q2"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q2"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q2"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q2"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q2"
-                    value="7">
-                <br>7 
-                <p> 
-                Very familiar  </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 3 -->
-
-    <div class="question">
-
-        <p><strong>
-                To what extent the virtual experience was about an experiential purchase (a purchase that is made 
-                with the intention to gain an experience)? </strong>
-            
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q3"
-                    value="1">
-                <br>1 
-                <p>
-                Not at all </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q3"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q3"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q3"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q3"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q3"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q3"
-                    value="7">
-                <br>7 
-                <p>
-                very much </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 4 -->
-
-    <div class="question">
-
-        <p><strong>
-                To what extent the virtual experience was about a material purchase (a purchase that is made with the 
-                intention to gain a material possession)? </strong>
-                
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q4"
-                    value="1">
-                <br>1 
-                <p>
-                Not at all </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q4"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q4"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q4"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q4"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q4"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q4"
-                    value="7">
-                <br>7 
-                <p>
-                very much  </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 5 -->
-
-    <div class="question">
-
-        <p><strong>
-               The virtual product experience makes my life better. </strong>
-        
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q5"
-                    value="1">
-                <br>1 
-                <p>
-                Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q5"
-                    value="2">
-                <br> 2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q5"
-                    value="3">
-                <br> 3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q5"
-                    value="4">
-                <br> 4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q5"
-                    value="5">
-                <br> 5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q5"
-                    value="6">
-                <br> 6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q5"
-                    value="7">
-                <br> 7 
-                <p>
-                Strongly agree </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 6 -->
-
-    <div class="question">
-
-        <p>
-          <strong>
-                The virtual product experience makes my life more satisfying. </strong>
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q6"
-                    value="1">
-                <br>1
-                <p> 
-                    Strongly disagree
-                </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q6"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q6"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q6"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q6"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q6"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q6"
-                    value="7">
-                <br>7
-                <p>
-                    Strongly agree
-                </p>
-            </div>
-
-        </div>
-
-    </div>
-    <!-- QUESTION 7 -->
-
-    <div class="question">
-
-        <p><strong>
-                The virtual product experience makes my life happier.</strong>
-            
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q7"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q7"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q7"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q7"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q7"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q7"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q7"
-                    value="7">
-                <br>7
-                <p> Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 8 -->
-
-    <div class="question">
-
-        <p>
-        <strong>
-               The virtual product experience makes my life more optimistic.</strong>
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q8"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q8"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q8"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q8"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q8"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q8"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q8"
-                    value="7">
-                <br>7
-                <p> Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 9 -->
-
-    <div class="question">
-
-        <p>
-         <strong>
-               The virtual product experience makes me think I am better.</strong>
-        
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q9"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q9"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q9"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q9"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q9"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q9"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q9"
-                    value="7">
-                <br>7
-                <p> Strongly agree </p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 10 -->
-
-    <div class="question">
-
-        <p>
-       <strong>
-                The virtual product experience makes me more confident.</strong>
-         
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q10"
-                    value="1">
-                <br>1
-                <p> Strongly disagree  </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q10"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q10"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q10"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q10"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q10"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q10"
-                    value="7">
-                <br>7
-                <p>  Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 11 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-               The virtual product experience makes me more positive about myself.</strong>
-
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q11"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q11"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q11"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q11"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q11"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q11"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q11"
-                    value="7">
-                <br>7
-                <p> Strongly agree </p>
-            </div>
-
-        </div>
-
-    </div>
-        <!-- QUESTION 12 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-                The virtual product experience brings me close to my ideal self.</strong>
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q12"
-                    value="1">
-                <br>1
-                <p> Strongly disagree </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q12"
-                    value="2">
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q12"
-                    value="3">
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q12"
-                    value="4">
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q12"
-                    value="5">
-                <br>5
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q12"
-                    value="6">
-                <br>6
-            </div>
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="E2_Q12"
-                    value="7">
-                <br>7
-                <p> Strongly agree</p>
-            </div>
-
-        </div>
-
-    </div>
-            
-    <p
-        class="error"
-        id="experience2Error"
-    >
-
-        Please answer all questions before continuing.
-
-    </p>
-
-
-    <button onclick="saveExperience2Responses()">
-
-        Continue
-
-    </button>
-
-</div>
-<!-- ========================= -->
-<!-- SPATIAL TASK -->
-<!-- ========================= -->
-
-<div id="spatialPage" class="page">
-
-    <h2>Spatial Task</h2>
-
-    <p>
-        Imagine<strong> Self circle</strong> represents your true, essential self <strong>(the values 
-        and beliefs you hold about yourself, say someone is calm, explorer, sophisticated, etc.).</strong> 
-        Click in the square below to reflect <strong> how closely your virtual experiences were related 
-        to your true, essential self.</strong> The closer the dot to the self circle, the more it is 
-        associated with your true essential self and vice versa. There is no right or wrong answer.
-    </p>
-
-    <!-- ========================= -->
-    <!-- SPATIAL TASK 1 -->
-    <!-- ========================= -->
-
-    <div id="spatialTask1">
-
-        <h2> <span style="font-weight: normal;"> How closely your virtual </span> TOURISM <span style="font-weight: normal;">experience and your true </span> SELF 
-        <span style="font-weight: normal;"> were related </span></h2>
-
-        <div
-            id="spatialCanvas1"
-            class="spatial-canvas"
-            onclick="recordSpatialClick1(event)"
-        >
-
-            <div
-                id="selfCircle1"
-                class="self-circle"
-            >
-                SELF
-            </div>
-
-        </div>
-
-
-        <p
-            id="spatial1Message"
-            style="display:none;"
-        >
-            Your response has been recorded.
-        </p>
-
-
-        <button
-            id="spatial1Continue"
-            onclick="goToSpatialTask2()"
-            style="display:none;"
-        >
-            Continue
+        <button id="completedButton2" onclick="experience2Completed()" style="display:none;">
+            I have completed virtual product experience
         </button>
-
     </div>
 
+    <!-- ========================= EXPERIENCE 2 RESPONSES ========================= -->
+    <div id="experience2ResponsePage" class="page">
+        <h1>Experience 2 (Virtual Product Experience)</h1>
+        <p>Please answer the following questions based on the virtual experience you have just completed.</p>
+        <div id="e2Items"></div>
+        <p class="error" id="experience2Error">Please answer all questions before continuing.</p>
+        <button onclick="saveExperience2Responses()">Continue</button>
+    </div>
 
-    <!-- ========================= -->
-    <!-- SPATIAL TASK 2 -->
-    <!-- ========================= -->
-
-    <div
-        id="spatialTask2"
-        style="display:none;"
-    >
-
-        <h2> <span style="font-weight: normal;"> How closely your virtual </span> PRODUCT <span style="font-weight: normal;">experience and your true </span> SELF 
-        <span style="font-weight: normal;"> were related </span></h2>
-
-        <div
-            id="spatialCanvas2"
-            class="spatial-canvas"
-            onclick="recordSpatialClick2(event)"
-        >
-
-            <div
-                id="selfCircle2"
-                class="self-circle"
-            >
-                SELF
-            </div>
-
-        </div>
-
-
-        <p
-            id="spatial2Message"
-            style="display:none;"
-        >
-            Your response has been recorded.
+    <!-- ========================= SPATIAL TASK ========================= -->
+    <div id="spatialPage" class="page">
+        <h2>Spatial Task</h2>
+        <p>
+            Imagine <strong>Self circle</strong> represents your true, essential self <strong>(the values
+            and beliefs you hold about yourself, say someone is calm, explorer, sophisticated, etc.).</strong>
+            Click in the square below to reflect <strong>how closely your virtual experiences were related
+            to your true, essential self.</strong> The closer the dot to the self circle, the more it is
+            associated with your true essential self and vice versa. There is no right or wrong answer.
         </p>
 
+        <div id="spatialTask1">
+            <h2><span style="font-weight: normal;">How closely your virtual </span>TOURISM
+                <span style="font-weight: normal;">experience and your true </span>SELF
+                <span style="font-weight: normal;">were related</span></h2>
 
-        <button
-            id="spatial2Continue"
-            onclick="finishSpatialTask()"
-            style="display:none;"
-        >
-            Continue
-        </button>
+            <div id="spatialCanvas1" class="spatial-canvas" onclick="recordSpatialClick(event, 1)">
+                <div id="selfCircle1" class="self-circle">SELF</div>
+            </div>
 
+            <p id="spatial1Message" style="display:none;">Your response has been recorded. You may click again to change it.</p>
+            <button id="spatial1Continue" onclick="goToSpatialTask2()" style="display:none;">Continue</button>
+        </div>
+
+        <div id="spatialTask2" style="display:none;">
+            <h2><span style="font-weight: normal;">How closely your virtual </span>PRODUCT
+                <span style="font-weight: normal;">experience and your true </span>SELF
+                <span style="font-weight: normal;">were related</span></h2>
+
+            <div id="spatialCanvas2" class="spatial-canvas" onclick="recordSpatialClick(event, 2)">
+                <div id="selfCircle2" class="self-circle">SELF</div>
+            </div>
+
+            <p id="spatial2Message" style="display:none;">Your response has been recorded. You may click again to change it.</p>
+            <button id="spatial2Continue" onclick="finishSpatialTask()" style="display:none;">Continue</button>
+        </div>
+    </div>
+
+    <!-- ========================= SCENARIO ========================= -->
+    <div id="scenarioPage" class="page">
+        <h1>Scenario</h1>
+        <p>
+            This is the final part of the study, in which you are given a scenario. Imagine
+            yourself in the situation and respond accordingly.
+        </p>
+        <h3><strong>A few important concepts:</strong></h3>
+        <p>
+            Experiential purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention
+            to acquire a life experience, e.g., a virtual concert or virtual tourism.
+        </p>
+        <p>
+            Material purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention
+            to acquire a material possession--a tangible object that you obtain and keep in your possession, e.g., clothes or fashion accessories
+            for your avatar in a VR game or virtual try on a product.
+        </p>
+
+        <div class="question">
+            <p><strong>Scenario</strong></p>
+            <p><strong>
+                Now imagine there are two people: one of whom knew about your exploration and reaction to the virtual tourism
+                experience (Person E), and the other knew the same about your virtual product experience (Person M), but neither
+                knew anything else about you.
+            </strong></p>
+            <p>Which person would better know the real you, your true, essential self?</p>
+            <div id="scenarioScale"></div>
+        </div>
+
+        <p class="error" id="scenarioError">Please answer the question before submitting.</p>
+        <button id="submitBtn" onclick="submitStudy()">Submit Study</button>
+    </div>
+
+    <!-- ========================= THANK YOU ========================= -->
+    <div id="thankYouPage" class="page">
+        <h1>Thank you!</h1>
+        <p style="text-align:center;">Your responses have been submitted. You may now close this tab.</p>
     </div>
 
 </div>
-<!-- ========================= -->
-<!-- SCENARIO ITEMS -->
-<!-- ========================= -->
 
-<div id="scenarioPage" class="page">
-
-    <h1>Scenario</h1>
-
-    <p>
-        This is the final part of the study, in which you are given a scenario. Imagine 
-        yourself in the situation and respond accordingly.
-    </p>
-    <h3><strong> Few important concepts: </strong></h3>
-    <p>
-        Experiential purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention 
-        to acquire a life experience, e.g., a virtual concert or virtual tourism.
-    </p>
-    <p>
-        Material purchase virtual experience: a virtual experience that is associated with the purchase, involving an intention 
-        to acquire a material possession--a tangible object that you obtain and keep in your possession, e.g., clothes or fashion accessories 
-        for your avatar in a VR game or virtual try on a product.
-    </p>
-
-    <!-- SCENARIO QUESTION 1 -->
-
-    <div class="question">
-
-        <p>
-            <strong>
-                Scenario 
-            </strong>
-        </p>
-        
-        <p>
-            <strong>
-            Now imagine there are two people: one of whom knew about your exploration and reaction to the virtual tourism 
-            experience(Person E), and the other knew the same about your virtual product experience (Person M), but neither 
-            knew anything else about you. </strong>
-        </p>
-        <p>
-            Which person would better know the real you, your true, essential self?
-        </p>
-
-        <div class="scale">
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="1"
-                >
-                <br>1
-                <p>
-                    Definitely Person M
-                </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="2"
-                >
-                <br>2
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="3"
-                >
-                <br>3
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="4"
-                >
-                <br>4
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="5"
-                >
-                <br>5
-                <p>
-                    both equally
-                </p>
-            </div>
-
-            <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="6"
-                >
-                <br>6
-            </div>
-
-                <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="7"
-                >
-                <br>7
-                
-            </div>
-
-                <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="8"
-                >
-                <br>8
-
-            </div>
-
-                <div class="scale-option">
-                <input
-                    type="radio"
-                    name="S_Q1"
-                    value="9"
-                >
-                <br>9
-                <p>
-                    Definitely Person E
-                </p>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <p
-        class="error"
-        id="scenarioError"
-    >
-        Please answer all questions before submitting.
-    </p>
-
-
-    <button id="submitBtn" onclick="submitStudy()">
-    Submit Study
-</button>
-
-</div>
-
-
-<!-- ========================= -->
-    <!-- JASVASCRIPT LOGIC -->
-    <!-- ========================= -->
-     <script>
-        const scriptURL =
-        
-        "https://script.google.com/macros/s/AKfycbz5OoVEHAjVII9zmyB3FCcqE6c6A2kPOM5vSJtKGh5kxPXEqZ4Vv4M9EzPnSaGnVR5NPg/exec";
-         let currentActivePage = "consentPage";
-         let participantData = {
-         participantID: null,
-         email: null,
-         age: null,
-         gender: null,
-        Education: null,
-        MonthlyIncome: null,
-        Condition: null,
-        MVS_1: null, MVS_2: null, MVS_3: null, MVS_4: null, MVS_5: null, MVS_6: null, MVS_7: null, MVS_8: null, MVS_9: null,
-        E1_Q1: null, E1_Q2: null, E1_Q3: null, E1_Q4: null, E1_Q5: null, E1_Q6: null, E1_Q7: null, E1_Q8: null, E1_Q9: null, E1_Q10: null, E1_Q11: null, E1_Q12: null,
-        E2_Q1: null, E2_Q2: null, E2_Q3: null, E2_Q4: null, E2_Q5: null, E2_Q6: null, E2_Q7: null, E2_Q8: null, E2_Q9: null, E2_Q10: null, E2_Q11: null, E2_Q12: null,
-        S_Q1: null,
-        consent: false,
-        isComplete: false,
-        lastUpdated: new Date().toISOString()
-         };
-
-         function saveProgress(syncToSheet = true) {
-        participantData.lastUpdated = new Date().toISOString();
-        const payload = {
-            data: participantData,
-            activePage: currentActivePage
-        };
-        localStorage.setItem("vr_study_data", JSON.stringify(payload));
-
-        if (syncToSheet && participantData.participantID) {
-            sendPartialDataToSheet(participantData);
-        }
-    }
-    // Attach live event listeners so every click/type saves to localStorage instantly
-    function bindLiveAutoSave() {
-        document.addEventListener("change", (e) => {
-            const target = e.target;
-            if (!target) return;
-
-            if (target.id === "consent") {
-                participantData.consent = target.checked;
-            } else if (target.name) { 
-                // Handles all radio buttons (gender, MVS_1-3, E1_Q1-3, E2_Q1-3, S_Q1, S_Q21-23)
-                participantData[target.name] = target.value;
-            } else if (target.id) { 
-                // Handles dropdowns like MonthlyIncome and text inputs
-                participantData[target.id] = target.value;
-            }
-            saveProgress(false); // Instant local save without triggering network requests
-        });
-
-        document.addEventListener("input", (e) => {
-            const target = e.target;
-            if (!target) return;
-            if (target.id && (target.type === "text" || target.type === "number" || target.type === "email")) {
-                participantData[target.id] = target.value;
-                saveProgress(false);
-            }
-        });
-    }
-    // Background sync function for partial/step-by-step saves
-    function sendPartialDataToSheet(data) {
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain" }, // text/plain prevents CORS preflight issues with Google Apps Script
-            body: JSON.stringify(data)
-        }).catch(err => console.log("Background sync error (retry later):", err));
-    }
-
-    function switchPage(fromId, toId) {
-        document.getElementById(fromId).classList.remove("active");
-        document.getElementById(toId).classList.add("active");
-        currentActivePage = toId;
-        saveProgress(true);
-    }
- function goToParticipantInfo() {
-        if (!document.getElementById("consent").checked) {
-            document.getElementById("consentError").style.display = "block";
-            return;
-        }
-        switchPage("consentPage", "participantInfoPage");
-    }
-
-    function saveParticipantInfo() {
-        const id = document.getElementById("participantID").value.trim();
-        const email = document.getElementById("email").value.trim();
-        if (!id || !email || isNaN(parseInt(id, 10))) {
-            document.getElementById("participantInfoError").style.display = "block";
-            return;
-        }
-        document.getElementById("participantInfoError").style.display = "none";
-
-        participantData.participantID = id;
-        participantData.email = email;
-
-        switchPage("participantInfoPage", "demographicPage");
-    }
-
-         function saveDemographics() {
-        const age = document.getElementById("age").value;
-        const gender = document.querySelector('input[name="gender"]:checked');
-        const Education = document.querySelector('input[name="Education"]:checked');
-        const income = document.getElementById("MonthlyIncome").value;
-
-        if (!age || !gender || !Education || !income) {
-            document.getElementById("demographicError").style.display = "block";
-            return;
-        }
-        participantData.age = age;
-        participantData.gender = gender.value;
-        participantData.Education = Education.value;
-        participantData.MonthlyIncome = income;
-        switchPage("demographicPage", "personalityPage");
-    }
-
-function savePersonality() {
-        const mvs1 = document.querySelector('input[name="MVS_1"]:checked');
-        const mvs2 = document.querySelector('input[name="MVS_2"]:checked');
-        const mvs3 = document.querySelector('input[name="MVS_3"]:checked');
-        const mvs4 = document.querySelector('input[name="MVS_4"]:checked');
-        const mvs5 = document.querySelector('input[name="MVS_5"]:checked');
-        const mvs6 = document.querySelector('input[name="MVS_6"]:checked');
-        const mvs7 = document.querySelector('input[name="MVS_7"]:checked');
-        const mvs8 = document.querySelector('input[name="MVS_8"]:checked');
-        const mvs9 = document.querySelector('input[name="MVS_9"]:checked');
-
-        if (!mvs1 || !mvs2 || !mvs3 || !mvs4 || !mvs5 || !mvs6 || ! mvs7 || !mvs8 || !mvs9) {
-            document.getElementById("personalityError").style.display = "block";
-            return;
-        }
-        document.getElementById("personalityError").style.display = "none";
-        participantData.MVS_1 = mvs1.value;
-        participantData.MVS_2 = mvs2.value;
-        participantData.MVS_3 = mvs3.value;
-        participantData.MVS_4 = mvs4.value;
-        participantData.MVS_5 = mvs5.value;
-        participantData.MVS_6 = mvs6.value;
-        participantData.MVS_7 = mvs7.value;
-        participantData.MVS_8 = mvs8.value;
-        participantData.MVS_9 = mvs9.value;
-
-        // Counterbalancing Routing
-        const pNum = parseInt(participantData.participantID, 10);
-        participantData.Condition = (pNum % 2 === 1) ? "A" : "B";
-
-        if (participantData.Condition === "A") {
-            switchPage("personalityPage", "experiencePage");
-        } else {
-            switchPage("personalityPage", "experience2Page");
-        }
-    }
-
-
-     
-    function startExternalExperience() {
-
-    const experienceURL =
-        "https://www.google.com";
-
-    window.open(
-        experienceURL,
-        "_blank"
-    );
-
-
-    document.getElementById("experienceMessage")
-        .style.display = "block";
-
-
-    document.getElementById("completedButton")
-        .style.display = "inline-block";
-
-        }
-        
-        function experienceCompleted() {
-
-    document.getElementById("experiencePage")
-        .classList.remove("active");
-
-    document.getElementById("experience1ResponsePage")
-        .classList.add("active");
-
-}
+<script>
 // =====================================
-// SAVE EXPERIENCE 1 RESPONSES
+// CONFIG
 // =====================================
+const SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbz5OoVEHAjVII9zmyB3FCcqE6c6A2kPOM5vSJtKGh5kxPXEqZ4Vv4M9EzPnSaGnVR5NPg/exec";
 
-function saveExperience1Responses() {
-
-    const e1q1 =
-        document.querySelector(
-            'input[name="E1_Q1"]:checked'
-        );
-
-    const e1q2 =
-        document.querySelector(
-            'input[name="E1_Q2"]:checked'
-        );
-    const e1q3 =
-        document.querySelector(
-            'input[name="E1_Q3"]:checked'
-        );
-    const e1q4 =
-        document.querySelector(
-            'input[name="E1_Q4"]:checked'
-        );
-    const e1q5 =
-        document.querySelector(
-            'input[name="E1_Q5"]:checked'
-        );
-    const e1q6 =
-        document.querySelector(
-            'input[name="E1_Q6"]:checked'
-        );
-    const e1q7 =
-        document.querySelector(
-            'input[name="E1_Q7"]:checked'
-        );
-    const e1q8 =
-        document.querySelector(
-            'input[name="E1_Q8"]:checked'
-        );
-    const e1q9 =
-        document.querySelector(
-            'input[name="E1_Q9"]:checked'
-        );
-    const e1q10 =
-        document.querySelector(
-            'input[name="E1_Q10"]:checked'
-        );
-    const e1q11 =
-        document.querySelector(
-            'input[name="E1_Q11"]:checked'
-        );
-    const e1q12 =
-        document.querySelector(
-            'input[name="E1_Q12"]:checked'
-        );
-   if (!e1q1 || !e1q2|| !e1q3 || !e1q4|| !e1q5 || !e1q6|| !e1q7 || !e1q8|| !e1q9 || !e1q10|| !e1q11 || !e1q12) {
-            document.getElementById("experience1Error").style.display = "block";
-            return;
-        }
-        document.getElementById("experience1Error").style.display = "none";
-    
-   // Save Experience 1 responses
-
-    participantData.E1_Q1 = e1q1.value;
-    participantData.E1_Q2 = e1q2.value;
-    participantData.E1_Q3 = e1q3.value;
-    participantData.E1_Q4 = e1q4.value;
-    participantData.E1_Q5 = e1q5.value;
-    participantData.E1_Q6 = e1q6.value;
-    participantData.E1_Q7 = e1q7.value;
-    participantData.E1_Q8 = e1q8.value;
-    participantData.E1_Q9 = e1q9.value;
-    participantData.E1_Q10 = e1q10.value;
-    participantData.E1_Q11 = e1q11.value;
-    participantData.E1_Q12 = e1q12.value;
-    // Move to the next stage based on counterbalancing condition
-
-// Counterbalanced Next Step
-        if (participantData.Condition === "A") {
-            switchPage("experience1ResponsePage", "experience2Page");
-        } else {
-            switchPage("experience1ResponsePage", "scenario1Page");
-        }
-    }
-       
-// =====================================
-// OPEN EXPERIENCE 2
-// =====================================
-
-function startExternalExperience2(gender) {
-    const experiences = {
-        male: "https://www.titaneyeplus.com/sunglasses/gender/men",
-        female: "https://www.titaneyeplus.com/sunglasses/gender/women"
-    };
-
-    const experienceURL2 = experiences[gender];
-
-    window.open(
-        experienceURL2,
-        "_blank"
-    );
-
-    document.getElementById("experience2Message")
-        .style.display = "block";
-
-    document.getElementById("completedButton2")
-        .style.display = "inline-block";
-
-}
-
-
-function experience2Completed() {
-
-     switchPage("experience2Page", "experience2ResponsePage");
-    }
-// =====================================
-// SAVE EXPERIENCE 2 RESPONSES
-// =====================================
-
-function saveExperience2Responses() {
-
-    const e2q1 =
-        document.querySelector(
-            'input[name="E2_Q1"]:checked'
-        );
-
-    const e2q2 =
-        document.querySelector(
-            'input[name="E2_Q2"]:checked'
-        );
-       
-    const e2q3 =
-        document.querySelector(
-            'input[name="E2_Q3"]:checked'
-        );
-    const e2q4 =
-        document.querySelector(
-            'input[name="E2_Q4"]:checked'
-        );
-    const e2q5 =
-        document.querySelector(
-            'input[name="E2_Q5"]:checked'
-        );
-    const e2q6 =
-        document.querySelector(
-            'input[name="E2_Q6"]:checked'
-        );
-    const e2q7 =
-        document.querySelector(
-            'input[name="E2_Q7"]:checked'
-        );
-    const e2q8 =
-        document.querySelector(
-            'input[name="E2_Q8"]:checked'
-        );
-    const e2q9 =
-        document.querySelector(
-            'input[name="E2_Q9"]:checked'
-        );
-    const e2q10 =
-        document.querySelector(
-            'input[name="E2_Q10"]:checked'
-        );
-    const e2q11 =
-        document.querySelector(
-            'input[name="E2_Q11"]:checked'
-        );
-    const e2q12 =
-        document.querySelector(
-            'input[name="E2_Q12"]:checked'
-        );
-
- if (!e2q1 || !e2q2 || !e2q3 || !e2q4 || !e2q5 || !e2q6 || !e2q7 || !e2q8 || !e2q9 || !e2q10 || !e2q11 || !e2q12) {
-            document.getElementById("experience2Error").style.display = "block";
-            return;
-        }
-        document.getElementById("experience2Error").style.display = "none";
-    
-    // Save Experience 2 responses
-
-    participantData.E2_Q1 =
-        e2q1.value;
-
-    participantData.E2_Q2 =
-        e2q2.value;
-    
-    participantData.E2_Q3 =
-        e2q3.value;
-
-    participantData.E2_Q4 =
-        e2q4.value;
-    
-    participantData.E2_Q5 =
-        e2q5.value;
-
-    participantData.E2_Q6 =
-        e2q6.value;
-    
-    participantData.E2_Q7 =
-        e2q7.value;
-
-    participantData.E2_Q8 =
-        e2q8.value;
-    
-    participantData.E2_Q9 =
-        e2q9.value;
-
-    participantData.E2_Q10 =
-        e2q10.value;
-
-    participantData.E2_Q11 =
-        e2q11.value;
-
-    participantData.E2_Q12 =
-        e2q12.value;
-
-    console.log(
-        "Participant Data after Experience 2:",
-        participantData
-    );
-
-
-  // Counterbalanced Next Step
-        if (participantData.Condition === "B") {
-            switchPage("experience2ResponsePage", "experiencePage");
-        } else {
-            switchPage("experience2ResponsePage", "scenario1Page");
-        }
-    }
-    
-
-// =====================================
-// SPATIAL DATA
-// =====================================
-
-let spatialData = {
-
-    experience1: null,
-
-    experience2: null
-
+const EXPERIENCE1_URL = "https://www.google.com"; // TODO: replace with your VR tourism link
+const EXPERIENCE2_URLS = {
+    male: "https://www.titaneyeplus.com/sunglasses/gender/men",
+    female: "https://www.titaneyeplus.com/sunglasses/gender/women"
 };
 
-
 // =====================================
-// SPATIAL TASK 1
+// QUESTION DATA
 // =====================================
+const MVS_ITEMS = [
+    "I like to own things that impress people.",
+    "These things I own say a lot about how well I\u2019m doing in life.",
+    "I admire people who own expensive homes, cars, and clothes.",
+    "I try to keep my life simple, as far as possessions are concerned.",
+    "Buying things gives me a lot of pleasure.",
+    "I like a lot of luxury in my life.",
+    "My life would be better if I owned certain things I don\u2019t have.",
+    "I\u2019d be happier if I could afford to buy more things.",
+    "It sometimes bothers me quite a bit that I can\u2019t afford to buy all the things I\u2019d like."
+];
 
-function recordSpatialClick1(event) {
-
-    const canvas =
-        document.getElementById("spatialCanvas1");
-
-    const rect =
-        canvas.getBoundingClientRect();
-
-
-    // Click position relative to canvas
-
-    const x =
-        event.clientX - rect.left;
-
-    const y =
-        event.clientY - rect.top;
-
-
-    // SELF position
-
-    const selfX =
-        canvas.clientWidth / 2;
-
-    const selfY =
-        canvas.clientHeight / 2;
-
-
-    // Difference from SELF
-
-    const dx =
-        x - selfX;
-
-    const dy =
-        y - selfY;
-
-
-    // Distance from SELF
-
-    const distance =
-        Math.sqrt(
-            (dx * dx) +
-            (dy * dy)
-        );
-
-
-    // Store Experience 1 data
-
-    spatialData.experience1 = {
-
-        clickX: x,
-
-        clickY: y,
-
-        selfX: selfX,
-
-        selfY: selfY,
-
-        differenceX: dx,
-
-        differenceY: dy,
-
-        distanceFromSelf: distance
-
-    };
-    // Add Experience 1 spatial data
-// to the master participant data
-
-participantData.E1_clickX = x;
-
-participantData.E1_clickY = y;
-
-participantData.E1_selfX = selfX;
-
-participantData.E1_selfY = selfY;
-
-participantData.E1_differenceX = dx;
-
-participantData.E1_differenceY = dy;
-
-participantData.E1_distanceFromSelf =
-    distance;
-
-
-    console.log(
-        "Experience 1 Spatial Data:",
-        spatialData.experience1
-    );
-
-
-    // Show the participant's click
-
-    showSpatialClick(
-        canvas,
-        x,
-        y
-    );
-
-
-    // Show confirmation
-
-    document.getElementById("spatial1Message")
-        .style.display = "block";
-
-
-    // Show Continue button
-
-    document.getElementById("spatial1Continue")
-        .style.display = "inline-block";
-
+// Builds the 12 questions of an experience response page. Wording kept as in the original.
+function experienceQuestions(prefix, firstQ, statements) {
+    const q = [
+        { type: "yesno", text: firstQ },
+        { type: "scale7", text: "How familiar were you with the experience?", low: "Not at all", high: "Very familiar" },
+        { type: "scale7", text: "To what extent the virtual experience was about an experiential purchase (a purchase that is made with the intention to gain an experience)?", low: "Not at all", high: "very much" },
+        { type: "scale7", text: "To what extent the virtual experience was about a material purchase (a purchase that is made with the intention to gain a material possession)?", low: "Not at all", high: "very much" }
+    ];
+    statements.forEach(s => q.push({ type: "scale7", text: s, low: "Strongly disagree", high: "Strongly agree" }));
+    return q.map((item, i) => Object.assign(item, { name: prefix + "_Q" + (i + 1) }));
 }
 
+const E1_QUESTIONS = experienceQuestions("E1",
+    "In the past two months, have you physically visited the place you just explored?", [
+    "The virtual tourism experience makes my life better.",
+    "The virtual tourism experience makes my life satisfying.",
+    "The virtual tourism experience makes my life happier.",
+    "The virtual tourism experience makes my life more optimistic.",
+    "The virtual tourism experience makes me think I am better.",
+    "The virtual tourism experience makes me more confident.",
+    "The virtual tourism experience makes me more positive about myself.",
+    "The virtual tourism experience brings me closer to my ideal self."
+]);
+
+const E2_QUESTIONS = experienceQuestions("E2",
+    "In the past two months, have you purchased the product you just explored?", [
+    "The virtual product experience makes my life better.",
+    "The virtual product experience makes my life more satisfying.",
+    "The virtual product experience makes my life happier.",
+    "The virtual product experience makes my life more optimistic.",
+    "The virtual product experience makes me think I am better.",
+    "The virtual product experience makes me more confident.",
+    "The virtual product experience makes me more positive about myself.",
+    "The virtual product experience brings me close to my ideal self."
+]);
+
+const MVS_NAMES = MVS_ITEMS.map((_, i) => "MVS_" + (i + 1));
+const E1_NAMES = E1_QUESTIONS.map(q => q.name);
+const E2_NAMES = E2_QUESTIONS.map(q => q.name);
 
 // =====================================
-// SHOW CLICK
+// RENDER HELPERS
 // =====================================
-
-function showSpatialClick(
-    canvas,
-    x,
-    y
-) {
-
-    // Remove previous click
-
-    const oldClick =
-        canvas.querySelector(".spatial-click");
-
-    if (oldClick) {
-
-        oldClick.remove();
-
+function scaleHTML(name, count, labels) {
+    let html = '<div class="scale">';
+    for (let v = 1; v <= count; v++) {
+        html += '<div class="scale-option">' +
+                '<input type="radio" name="' + name + '" value="' + v + '"><br>' + v +
+                (labels && labels[v] ? '<p>' + labels[v] + '</p>' : '') +
+                '</div>';
     }
-
-
-    // Create new click marker
-
-    const marker =
-        document.createElement("div");
-
-
-    marker.className =
-        "spatial-click";
-
-
-    marker.style.left =
-        x + "px";
-
-
-    marker.style.top =
-        y + "px";
-
-
-    canvas.appendChild(marker);
-
+    return html + '</div>';
 }
 
+function yesNoHTML(name) {
+    return '<div class="scale">' +
+        '<div class="scale-option"><input type="radio" name="' + name + '" value="Yes"><br>Yes</div>' +
+        '<div class="scale-option"><input type="radio" name="' + name + '" value="No"><br>No</div>' +
+        '</div>';
+}
+
+function questionHTML(text, inner) {
+    return '<div class="question"><p><strong>' + text + '</strong></p>' + inner + '</div>';
+}
+
+function buildQuestionnaires() {
+    document.getElementById("personalityItems").innerHTML = MVS_ITEMS.map((t, i) =>
+        questionHTML(t, scaleHTML("MVS_" + (i + 1), 5, { 1: "Strongly disagree", 5: "Strongly agree" }))
+    ).join("");
+
+    const renderExp = list => list.map(q =>
+        q.type === "yesno"
+            ? questionHTML(q.text, yesNoHTML(q.name))
+            : questionHTML(q.text, scaleHTML(q.name, 7, { 1: q.low, 7: q.high }))
+    ).join("");
+
+    document.getElementById("e1Items").innerHTML = renderExp(E1_QUESTIONS);
+    document.getElementById("e2Items").innerHTML = renderExp(E2_QUESTIONS);
+
+    document.getElementById("scenarioScale").innerHTML =
+        scaleHTML("S_Q1", 9, { 1: "Definitely Person M", 5: "Both equally", 9: "Definitely Person E" });
+}
 
 // =====================================
-// MOVE TO SPATIAL TASK 2
+// STATE
 // =====================================
+let currentActivePage = "consentPage";
+
+let participantData = {
+    participantID: null, email: null, age: null, gender: null,
+    Education: null, MonthlyIncome: null, Condition: null,
+    S_Q1: null, consent: false, isComplete: false,
+    lastUpdated: new Date().toISOString()
+};
+MVS_NAMES.concat(E1_NAMES, E2_NAMES).forEach(n => { participantData[n] = null; });
+
+function saveProgress(syncToSheet = true) {
+    participantData.lastUpdated = new Date().toISOString();
+    try {
+        localStorage.setItem("vr_study_data", JSON.stringify({
+            data: participantData,
+            activePage: currentActivePage
+        }));
+    } catch (e) { console.warn("localStorage unavailable:", e); }
+
+    if (syncToSheet && participantData.participantID) {
+        sendPartialDataToSheet(participantData);
+    }
+}
+
+function bindLiveAutoSave() {
+    document.addEventListener("change", (e) => {
+        const t = e.target;
+        if (!t) return;
+        if (t.id === "consent") {
+            participantData.consent = t.checked;
+        } else if (t.name) {
+            participantData[t.name] = t.value;
+        } else if (t.id) {
+            participantData[t.id] = t.value;
+        }
+        saveProgress(false);
+    });
+
+    document.addEventListener("input", (e) => {
+        const t = e.target;
+        if (t && t.id && (t.type === "text" || t.type === "number" || t.type === "email")) {
+            participantData[t.id] = t.value;
+            saveProgress(false);
+        }
+    });
+}
+
+function sendPartialDataToSheet(data) {
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(data)
+    }).catch(err => console.log("Background sync error (retry later):", err));
+}
+
+function switchPage(fromId, toId) {
+    document.getElementById(fromId).classList.remove("active");
+    document.getElementById(toId).classList.add("active");
+    currentActivePage = toId;
+    window.scrollTo(0, 0);
+    saveProgress(true);
+}
+
+function allAnswered(names) {
+    return names.every(n => document.querySelector('input[name="' + n + '"]:checked'));
+}
+
+function collect(names) {
+    names.forEach(n => {
+        const el = document.querySelector('input[name="' + n + '"]:checked');
+        if (el) participantData[n] = el.value;
+    });
+}
+
+// =====================================
+// PAGE LOGIC
+// =====================================
+function goToParticipantInfo() {
+    if (!document.getElementById("consent").checked) {
+        document.getElementById("consentError").style.display = "block";
+        return;
+    }
+    document.getElementById("consentError").style.display = "none";
+    participantData.consent = true;
+    switchPage("consentPage", "participantInfoPage");
+}
+
+function saveParticipantInfo() {
+    const id = document.getElementById("participantID").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!id || !emailOk || isNaN(parseInt(id, 10))) {
+        document.getElementById("participantInfoError").style.display = "block";
+        return;
+    }
+    document.getElementById("participantInfoError").style.display = "none";
+    participantData.participantID = id;
+    participantData.email = email;
+    switchPage("participantInfoPage", "demographicPage");
+}
+
+function saveDemographics() {
+    const age = document.getElementById("age").value;
+    const gender = document.querySelector('input[name="gender"]:checked');
+    const education = document.querySelector('input[name="Education"]:checked');
+    const income = document.getElementById("MonthlyIncome").value;
+    const ageNum = parseInt(age, 10);
+
+    if (!age || isNaN(ageNum) || ageNum < 18 || ageNum > 100 || !gender || !education || !income) {
+        document.getElementById("demographicError").style.display = "block";
+        return;
+    }
+    document.getElementById("demographicError").style.display = "none";
+    participantData.age = age;
+    participantData.gender = gender.value;
+    participantData.Education = education.value;
+    participantData.MonthlyIncome = income;
+    switchPage("demographicPage", "personalityPage");
+}
+
+function savePersonality() {
+    if (!allAnswered(MVS_NAMES)) {
+        document.getElementById("personalityError").style.display = "block";
+        return;
+    }
+    document.getElementById("personalityError").style.display = "none";
+    collect(MVS_NAMES);
+
+    // Counterbalancing: odd ID -> A (tourism first), even ID -> B (product first)
+    const pNum = parseInt(participantData.participantID, 10);
+    participantData.Condition = (pNum % 2 === 1) ? "A" : "B";
+
+    if (participantData.Condition === "A") {
+        switchPage("personalityPage", "experiencePage");
+    } else {
+        switchPage("personalityPage", "experience2Page");
+    }
+}
+
+// ---- Experience 1 (tourism) ----
+function startExternalExperience() {
+    window.open(EXPERIENCE1_URL, "_blank");
+    document.getElementById("experienceMessage").style.display = "block";
+    document.getElementById("completedButton").style.display = "inline-block";
+}
+
+function experienceCompleted() {
+    switchPage("experiencePage", "experience1ResponsePage");
+}
+
+function saveExperience1Responses() {
+    if (!allAnswered(E1_NAMES)) {
+        document.getElementById("experience1Error").style.display = "block";
+        return;
+    }
+    document.getElementById("experience1Error").style.display = "none";
+    collect(E1_NAMES);
+
+    if (participantData.Condition === "A") {
+        switchPage("experience1ResponsePage", "experience2Page");
+    } else {
+        switchPage("experience1ResponsePage", "spatialPage");
+    }
+}
+
+// ---- Experience 2 (product) ----
+function startExternalExperience2(gender) {
+    window.open(EXPERIENCE2_URLS[gender], "_blank");
+    document.getElementById("experience2Message").style.display = "block";
+    document.getElementById("completedButton2").style.display = "inline-block";
+}
+
+function experience2Completed() {
+    switchPage("experience2Page", "experience2ResponsePage");
+}
+
+function saveExperience2Responses() {
+    if (!allAnswered(E2_NAMES)) {
+        document.getElementById("experience2Error").style.display = "block";
+        return;
+    }
+    document.getElementById("experience2Error").style.display = "none";
+    collect(E2_NAMES);
+
+    if (participantData.Condition === "B") {
+        switchPage("experience2ResponsePage", "experiencePage");
+    } else {
+        switchPage("experience2ResponsePage", "spatialPage");
+    }
+}
+
+// =====================================
+// SPATIAL TASK
+// =====================================
+function recordSpatialClick(event, n) {
+    const canvas = document.getElementById("spatialCanvas" + n);
+    const rect = canvas.getBoundingClientRect();
+
+    // Position relative to the canvas' inner area (excludes the border)
+    const x = event.clientX - rect.left - canvas.clientLeft;
+    const y = event.clientY - rect.top - canvas.clientTop;
+
+    const selfX = canvas.clientWidth / 2;
+    const selfY = canvas.clientHeight / 2;
+    const dx = x - selfX;
+    const dy = y - selfY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const p = "E" + n + "_";
+    participantData[p + "clickX"] = x;
+    participantData[p + "clickY"] = y;
+    participantData[p + "selfX"] = selfX;
+    participantData[p + "selfY"] = selfY;
+    participantData[p + "differenceX"] = dx;
+    participantData[p + "differenceY"] = dy;
+    participantData[p + "distanceFromSelf"] = distance;
+
+    showSpatialClick(canvas, x, y);
+    document.getElementById("spatial" + n + "Message").style.display = "block";
+    document.getElementById("spatial" + n + "Continue").style.display = "inline-block";
+    saveProgress(false);
+}
+
+function showSpatialClick(canvas, x, y) {
+    const old = canvas.querySelector(".spatial-click");
+    if (old) old.remove();
+    const marker = document.createElement("div");
+    marker.className = "spatial-click";
+    marker.style.left = x + "px";
+    marker.style.top = y + "px";
+    canvas.appendChild(marker);
+}
 
 function goToSpatialTask2() {
-
-    document.getElementById("spatialTask1")
-        .style.display = "none";
-
-
-    document.getElementById("spatialTask2")
-        .style.display = "block";
-
+    document.getElementById("spatialTask1").style.display = "none";
+    document.getElementById("spatialTask2").style.display = "block";
+    window.scrollTo(0, 0);
 }
-
-
-// =====================================
-// SPATIAL TASK 2
-// =====================================
-
-function recordSpatialClick2(event) {
-
-    const canvas =
-        document.getElementById("spatialCanvas2");
-
-    const rect =
-        canvas.getBoundingClientRect();
-
-
-    const x =
-        event.clientX - rect.left;
-
-    const y =
-        event.clientY - rect.top;
-
-
-    // SELF position
-
-    const selfX =
-        canvas.clientWidth / 2;
-
-    const selfY =
-        canvas.clientHeight / 2;
-
-
-    // Difference from SELF
-
-    const dx =
-        x - selfX;
-
-    const dy =
-        y - selfY;
-
-
-    // Distance from SELF
-
-    const distance =
-        Math.sqrt(
-            (dx * dx) +
-            (dy * dy)
-        );
-
-
-    // Store Experience 2 data
-
-    spatialData.experience2 = {
-
-        clickX: x,
-
-        clickY: y,
-
-        selfX: selfX,
-
-        selfY: selfY,
-
-        differenceX: dx,
-
-        differenceY: dy,
-
-        distanceFromSelf: distance
-
-    };
-    // Add Experience 2 spatial data
-// to the master participant data
-
-participantData.E2_clickX = x;
-
-participantData.E2_clickY = y;
-
-participantData.E2_selfX = selfX;
-
-participantData.E2_selfY = selfY;
-
-participantData.E2_differenceX = dx;
-
-participantData.E2_differenceY = dy;
-
-participantData.E2_distanceFromSelf =
-    distance;
-
-
-    console.log(
-        "Experience 2 Spatial Data:",
-        spatialData.experience2
-    );
-
-
-    // Show click
-
-    showSpatialClick(
-        canvas,
-        x,
-        y
-    );
-
-
-    // Show confirmation
-
-    document.getElementById("spatial2Message")
-        .style.display = "block";
-
-
-    // Show Continue button
-
-    document.getElementById("spatial2Continue")
-        .style.display = "inline-block";
-
-}
-
-
-// =====================================
-// FINISH SPATIAL TASK
-// =====================================
 
 function finishSpatialTask() {
-
-    console.log(
-        "FINAL SPATIAL DATA:",
-        spatialData
-    );
-
-
-    document.getElementById("spatialPage")
-        .classList.remove("active");
-
-
-    document.getElementById("scenarioPage")
-        .classList.add("active");
-
+    switchPage("spatialPage", "scenarioPage");
 }
 
 // =====================================
-// SAVE SCENARIO RESPONSES
+// SUBMIT
 // =====================================
-
 function submitStudy() {
-
-     const sq1 = document.querySelector('input[name="S_Q1"]:checked');
-
+    const sq1 = document.querySelector('input[name="S_Q1"]:checked');
     if (!sq1) {
-            document.getElementById("scenario1Error").style.display = "block";
-            return;
-        }
-        document.getElementById("scenario1Error").style.display = "none";
-
-    participantData.S_Q21 = sq21.value;
-    participantData.isComplete = true;
+        document.getElementById("scenarioError").style.display = "block";
+        return;
+    }
+    document.getElementById("scenarioError").style.display = "none";
 
     if (localStorage.getItem("submitted_" + participantData.participantID)) {
-            alert("This Participant ID has already submitted responses.");
-            return;
-        }
-
-        const btn = document.getElementById("submitBtn");
-        btn.disabled = true;
-        btn.innerText = "Submitting...";
-
-        sendDataWithRetry(participantData);
+        alert("This Participant ID has already submitted responses.");
+        return;
     }
 
-    function sendDataWithRetry(payload, maxRetries = 5, delay = 3000) {
-        saveProgress(false);
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify(payload)
-        })
-        .then(() => {
-            localStorage.setItem("submitted_" + payload.participantID, "true");
-            localStorage.removeItem("vr_study_data");
-            alert("Study successfully submitted!");
-        })
-        .catch((err) => {
-            if (maxRetries > 0) {
-                setTimeout(() => sendDataWithRetry(payload, maxRetries - 1, delay * 1.5), delay);
-            } else {
-                alert("Network error. Your responses remain saved on your device and will sync automatically when back online.");
+    participantData.S_Q1 = sq1.value;
+    participantData.isComplete = true;
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerText = "Submitting...";
+
+    sendDataWithRetry(participantData);
+}
+
+function sendDataWithRetry(payload, maxRetries = 5, delay = 3000) {
+    saveProgress(false);
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
+    })
+    .then(() => {
+        localStorage.setItem("submitted_" + payload.participantID, "true");
+        localStorage.removeItem("vr_study_data");
+        switchPageNoSave("scenarioPage", "thankYouPage");
+    })
+    .catch(() => {
+        if (maxRetries > 0) {
+            setTimeout(() => sendDataWithRetry(payload, maxRetries - 1, delay * 1.5), delay);
+        } else {
+            const btn = document.getElementById("submitBtn");
+            btn.disabled = false;
+            btn.innerText = "Submit Study";
+            alert("Network error. Your responses remain saved on your device. Please check your connection and try again.");
+        }
+    });
+}
+
+function switchPageNoSave(fromId, toId) {
+    document.getElementById(fromId).classList.remove("active");
+    document.getElementById(toId).classList.add("active");
+    currentActivePage = toId;
+    window.scrollTo(0, 0);
+}
+
+// =====================================
+// RESTORE PROGRESS ON RELOAD
+// =====================================
+function restoreProgress() {
+    let savedRaw = null;
+    try { savedRaw = localStorage.getItem("vr_study_data"); } catch (e) {}
+    if (!savedRaw) return;
+
+    try {
+        const parsed = JSON.parse(savedRaw);
+        if (parsed.data) participantData = Object.assign({}, participantData, parsed.data);
+        if (parsed.activePage) currentActivePage = parsed.activePage;
+
+        const consentElem = document.getElementById("consent");
+        if (consentElem && participantData.consent) consentElem.checked = true;
+
+        ["participantID", "email", "age", "MonthlyIncome"].forEach(id => {
+            const elem = document.getElementById(id);
+            if (elem && participantData[id] !== undefined && participantData[id] !== null) {
+                elem.value = participantData[id];
             }
         });
-    }
 
-    // On page reload: Restore stored data into all form controls and open active page
-    function restoreProgress() {
-        const savedRaw = localStorage.getItem("vr_study_data");
-        if (!savedRaw) return;
-
-        try {
-            const parsed = JSON.parse(savedRaw);
-            if (parsed.data) {
-                participantData = { ...participantData, ...parsed.data };
+        ["gender", "Education", "S_Q1"].concat(MVS_NAMES, E1_NAMES, E2_NAMES).forEach(field => {
+            const val = participantData[field];
+            if (val !== undefined && val !== null && val !== "") {
+                const radio = document.querySelector('input[name="' + field + '"][value="' + val + '"]');
+                if (radio) radio.checked = true;
             }
-            if (parsed.activePage) {
-                currentActivePage = parsed.activePage;
+        });
+
+        // Redraw saved spatial clicks
+        [1, 2].forEach(n => {
+            const x = participantData["E" + n + "_clickX"];
+            const y = participantData["E" + n + "_clickY"];
+            if (x !== undefined && x !== null) {
+                showSpatialClick(document.getElementById("spatialCanvas" + n), x, y);
+                document.getElementById("spatial" + n + "Message").style.display = "block";
+                document.getElementById("spatial" + n + "Continue").style.display = "inline-block";
             }
+        });
 
-            // 1. Restore Checkbox
-            const consentElem = document.getElementById("consent");
-            if (consentElem && participantData.consent) {
-                consentElem.checked = true;
-            }
-
-            // 2. Restore Text, Email, Number, and Dropdown Inputs by ID
-            ["participantID", "email", "age", "MonthlyIncome"].forEach(id => {
-                const elem = document.getElementById(id);
-                if (elem && participantData[id] !== undefined && participantData[id] !== null) {
-                    elem.value = participantData[id];
-                }
-            });
-
-            // 3. Restore all Radio Buttons by Name
-            const radioFields = [
-                "gender", "Education", "MVS_1", "MVS_2", "MVS_3", "MVS_4", "MVS_5", "MVS_6", "MVS_7", "MVS_8", "MVS_9",
-                "E1_Q1", "E1_Q2", "E1_Q3", "E1_Q4", "E1_Q5", "E1_Q6", "E1_Q7", "E1_Q8", "E1_Q9", "E1_Q10", "E1_Q11", "E1_Q12",
-                "E2_Q1", "E2_Q2", "E2_Q3", "E2_Q4", "E2_Q5", "E2_Q6", "E2_Q7", "E2_Q8", "E2_Q9", "E2_Q10", "E2_Q11", "E2_Q12",
-                "S_Q1"
-            ];
-
-            radioFields.forEach(field => {
-                const val = participantData[field];
-                if (val !== undefined && val !== null && val !== "") {
-                    const radio = document.querySelector(`input[name="${field}"][value="${val}"]`);
-                    if (radio) radio.checked = true;
-                }
-            });
-
-            // 4. Navigate back to where the user left off
-            if (currentActivePage && document.getElementById(currentActivePage)) {
-                document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-                document.getElementById(currentActivePage).classList.add("active");
-            }
-        } catch (e) {
-            console.error("Error restoring state:", e);
+        if (currentActivePage && document.getElementById(currentActivePage)) {
+            document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+            document.getElementById(currentActivePage).classList.add("active");
         }
+    } catch (e) {
+        console.error("Error restoring state:", e);
     }
+}
 
-    // Initialize listeners and restore state when page loads
-    window.addEventListener("DOMContentLoaded", () => {
-        restoreProgress();
-        bindLiveAutoSave();
-    });
+// =====================================
+// INIT
+// =====================================
+window.addEventListener("DOMContentLoaded", () => {
+    buildQuestionnaires();   // must run before restore so radios exist
+    restoreProgress();
+    bindLiveAutoSave();
+});
 
-    // Auto-sync offline data when internet connection is restored
-    window.addEventListener("online", () => {
+// Auto-sync offline data when connection returns
+window.addEventListener("online", () => {
+    try {
         const savedRaw = localStorage.getItem("vr_study_data");
         if (savedRaw) {
-            try {
-                const parsed = JSON.parse(savedRaw);
-                const data = parsed.data || parsed;
-                if (data.participantID && !localStorage.getItem("submitted_" + data.participantID)) {
-                    sendPartialDataToSheet(data);
-                }
-            } catch(e) {}
+            const parsed = JSON.parse(savedRaw);
+            const data = parsed.data || parsed;
+            if (data.participantID && !localStorage.getItem("submitted_" + data.participantID)) {
+                sendPartialDataToSheet(data);
+            }
         }
-    });
+    } catch (e) {}
+});
 </script>
 </body>
 </html>
-
-   
-   
