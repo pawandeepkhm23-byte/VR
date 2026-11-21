@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Experience Study</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:30px}
+.container{max-width:800px;margin:auto;background:#fff;padding:35px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.1)}
+h1{text-align:center} h2{margin-top:25px} p{line-height:1.6}
+label{display:block;margin-top:15px;margin-bottom:5px}
+input,select,textarea{padding:10px;font-size:16px;width:100%;box-sizing:border-box;font-family:inherit}
+textarea{min-height:120px;resize:vertical}
+.consent-box{background:#f0f0f0;padding:20px;margin:20px 0}
+.radio-option{display:block;margin:8px 0}
+.radio-option input,.consent-box input{width:auto}
+button{margin-top:25px;margin-right:10px;padding:12px 25px;font-size:16px;cursor:pointer}
+.error{color:red;display:none;margin-top:10px}
+.page{display:none} .page.active{display:block}
+.question{margin-top:30px;padding:20px;background:#f8f8f8;border-radius:8px}
+.scale{display:flex;justify-content:space-between;margin-top:15px;gap:4px}
+.scale-option{text-align:center;flex:1;font-size:14px}
+.scale-option input{width:auto}
+.scale-option .note{margin:4px 0 0;font-size:12px;line-height:1.3}
+.recall{background:#eef4ff;border-left:4px solid #4a78c2;padding:15px 20px;margin:20px 0;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 1. CONSENT -->
+<div id="consentPage" class="page active">
+  <h1>Research Study</h1>
+  <h2>Information about the Study</h2>
+  <p>You are invited to participate in a research study examining consumer responses to virtual experiences.
+  Your participation will involve a few demographic details about yourself, following your consent,
+  exposure to virtual experiences, and post-experience responses. Your experience session may be recorded for an evident purpose.</p>
+  <p>Your participation is voluntary. You may stop participating at any time.</p>
+  <p>Principal Investigator: Pawandeep Kaur</p>
+  <p>Supervisor: Dr Gyan Prakash</p>
+  <p>Department of Humanities and Management, Dr B. R. Ambedkar National Institute of Technology, Jalandhar</p>
+  <div class="consent-box">
+    <h3>Consent</h3>
+    <label><input type="checkbox" id="consent"> I have read the information above and voluntarily agree to participate in this study.</label>
+  </div>
+  <p class="error" id="consentError">Please provide your consent before continuing.</p>
+  <button type="button" onclick="goToParticipantInfo()">Continue</button>
+</div>
+
+<!-- 2. PARTICIPANT INFO -->
+<div id="participantInfoPage" class="page">
+  <h1>Participant Information</h1>
+  <p>Please enter participant information below.</p>
+  <label for="participantID">Participant ID</label>
+  <input type="text" id="participantID" placeholder="Enter numeric Participant ID">
+  <label for="email">Email</label>
+  <input type="email" id="email" placeholder="Enter your email">
+  <p class="error" id="participantInfoError">Please enter a valid numeric Participant ID and email.</p>
+  <button type="button" onclick="saveParticipantInfo()">Continue</button>
+</div>
+
+<!-- 3. DEMOGRAPHICS -->
+<div id="demographicPage" class="page">
+  <h1>About You</h1>
+  <p>Please provide the following information.</p>
+  <label for="age">Age</label>
+  <input type="number" id="age" min="18" max="100" placeholder="Enter your age">
+  <label>Gender</label>
+  <div class="radio-option"><input type="radio" name="gender" value="Male"> Male</div>
+  <div class="radio-option"><input type="radio" name="gender" value="Female"> Female</div>
+  <div class="radio-option"><input type="radio" name="gender" value="Other"> Other</div>
+  <div class="radio-option"><input type="radio" name="gender" value="Prefer not to say"> Prefer not to say</div>
+  <label>Education</label>
+  <div class="radio-option"><input type="radio" name="Education" value="High School"> High School</div>
+  <div class="radio-option"><input type="radio" name="Education" value="Bachelor"> Bachelor</div>
+  <div class="radio-option"><input type="radio" name="Education" value="Master"> Master</div>
+  <div class="radio-option"><input type="radio" name="Education" value="PhD"> PhD</div>
+  <label for="MonthlyIncome">Monthly Family Income</label>
+  <select id="MonthlyIncome">
+    <option value="">Select an option</option>
+    <option value="Below 30000">Below 30000</option>
+    <option value="30000-60000">30000-60000</option>
+    <option value="60000-150000">60000-150000</option>
+    <option value="Above 150000">Above 150000</option>
+  </select>
+  <p class="error" id="demographicError">Please complete all required fields.</p>
+  <button type="button" onclick="saveDemographics()">Continue</button>
+</div>
+
+<!-- EXPERIENCE 1: DESTINATION -->
+<div id="experience1Page" class="page">
+  <h1>Virtual Experience: Destination</h1>
+  <h2>Instructions</h2>
+  <p>This experience involves exploring a virtual destination. Click the button below to open the experience in a new tab. After exploring, return to this tab to continue the study.</p>
+  <div class="consent-box"><p><strong>Do not close this study tab.</strong></p></div>
+  <button type="button" onclick="startExperience1()">Start Experience</button>
+  <p id="exp1Message" style="display:none;margin-top:20px;">After exploring the virtual destination, return to this tab and click "I have completed the virtual destination experience".</p>
+  <button type="button" id="exp1Done" onclick="nextPage('experience1Page')" style="display:none;">I have completed the virtual destination experience</button>
+</div>
+
+<!-- EXPERIENCE 1 RESPONSES -->
+<div id="experience1ResponsePage" class="page">
+  <h1>Your Destination Experience</h1>
+  <div id="e1Container"></div>
+  <p class="error" id="experience1Error">Please answer all questions.</p>
+  <button type="button" onclick="saveResponses('experience1ResponsePage','e1Container','E1','experience1Error')">Continue</button>
+</div>
+
+<!-- EXPERIENCE 2: SUNGLASSES -->
+<div id="experience2Page" class="page">
+  <h1>Virtual Experience: Sunglasses</h1>
+  <h2>Instructions</h2>
+  <p>This experience involves trying on sunglasses virtually. <strong>Male</strong> participants click on the <strong>Men's virtual try-on</strong>
+  and <strong>Female</strong> participants click on the <strong>Women's virtual try-on</strong>. After exploring, return to this browser tab to continue the study.</p>
+  <div class="consent-box"><p><strong>Do not close this study tab.</strong></p></div>
+  <button type="button" onclick="startExperience2('male')">Men's virtual try-on</button>
+  <button type="button" onclick="startExperience2('female')">Women's virtual try-on</button>
+  <p id="exp2Message" style="display:none;margin-top:20px;">The new tab has been opened. After exploring the virtual sunglasses, return to this tab and click "I have completed the virtual sunglasses experience".</p>
+  <button type="button" id="exp2Done" onclick="nextPage('experience2Page')" style="display:none;">I have completed the virtual sunglasses experience</button>
+</div>
+
+<!-- EXPERIENCE 2 RESPONSES -->
+<div id="experience2ResponsePage" class="page">
+  <h1>Your Sunglasses Experience</h1>
+  <div id="e2Container"></div>
+  <p class="error" id="experience2Error">Please answer all questions.</p>
+  <button type="button" onclick="saveResponses('experience2ResponsePage','e2Container','E2','experience2Error')">Continue</button>
+</div>
+
+<!-- RECALL 1 -->
+<div id="recall1Page" class="page">
+  <h1>Virtual Destination Experience</h1>
+  <p>Recall your virtual destination experience, about which you wrote:</p>
+  <div class="recall" id="recall1Text"></div>
+  <p>Please rate the following statements.</p>
+  <div id="r1Container"></div>
+  <p class="error" id="recall1Error">Please answer all statements.</p>
+  <button type="button" onclick="saveRecall('recall1Page','E1','recall1Error')">Continue</button>
+</div>
+
+<!-- RECALL 2 -->
+<div id="recall2Page" class="page">
+  <h1>Virtual Sunglasses Experience</h1>
+  <p>Recall your virtual sunglasses experience, about which you wrote:</p>
+  <div class="recall" id="recall2Text"></div>
+  <p>Please rate the following statements.</p>
+  <div id="r2Container"></div>
+  <p class="error" id="recall2Error">Please answer all statements.</p>
+  <button type="button" onclick="saveRecall('recall2Page','E2','recall2Error')">Continue</button>
+</div>
+
+<!-- FINAL -->
+<div id="finalPage" class="page">
+  <h1>Final Question</h1>
+  <p><strong>If you have the required budget, which of the purchases would you spend it on?</strong></p>
+  <div class="radio-option"><input type="radio" name="Purchase_Choice" value="Destination"> Destination (the virtual destination you explored)</div>
+  <div class="radio-option"><input type="radio" name="Purchase_Choice" value="Sunglasses"> Sunglasses (the virtual sunglasses you tried on)</div>
+  <div class="radio-option"><input type="radio" name="Purchase_Choice" value="Both"> Both (the destination and the sunglasses)</div>
+  <div class="radio-option"><input type="radio" name="Purchase_Choice" value="None"> None (neither purchase)</div>
+  <p class="error" id="finalError">Please select an option.</p>
+  <button type="button" id="submitBtn" onclick="submitStudy()">Submit Study</button>
+</div>
+
+<!-- THANK YOU -->
+<div id="thankYouPage" class="page">
+  <h1>Thank You</h1>
+  <p style="text-align:center">Your response has been recorded. You may now close this tab.</p>
+</div>
+
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5M_EimgwhZo4NnItF5VBcPJLey1VVDCRaWTENiVRHgtHc5CnMg2uApUmS6moEiPBGzg/exec";  // TODO: replace
+const LINKS = {                                                  // TODO: replace placeholders
+  destination: "https://example.com/destination",
+  sunglassesMale: "https://example.com/mens-sunglasses",
+  sunglassesFemale: "https://example.com/womens-sunglasses"
+};
+
+/* Page order per condition (A = odd ID, destination first; B = even ID, sunglasses first) */
+const FLOW = {
+  A: ["experience1Page","experience1ResponsePage","experience2Page","experience2ResponsePage","recall1Page","recall2Page","finalPage"],
+  B: ["experience2Page","experience2ResponsePage","experience1Page","experience1ResponsePage","recall1Page","recall2Page","finalPage"]
+};
+
+const SUBS = [["Uniq",3],["Social",2],["Self",3],["Aes",3]];
+const E_FIELDS = ["Words","Happy","Contrib"];
+const RADIOS = ["gender","Education","Purchase_Choice"];
+let participantData = {
+  participantID:null, email:null, age:null, gender:null, Education:null, MonthlyIncome:null, Condition:null,
+  Purchase_Choice:null, consent:false, isComplete:false, lastUpdated:new Date().toISOString()
+};
+["E1","E2"].forEach(p => {
+  E_FIELDS.forEach(f => { const k = p+"_"+f; participantData[k] = null; if (f !== "Words") RADIOS.push(k); });
+  SUBS.forEach(([s,n]) => { for (let i=1;i<=n;i++){ const k = p+"_"+s+i; participantData[k] = null; RADIOS.push(k); } });
+});
+let currentActivePage = "consentPage";
+
+/* Safe localStorage */
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+function lsDel(k){ try { localStorage.removeItem(k); } catch(e){} }
+
+/* Question builders */
+function likert(name, text, left, right, n = 7) {
+  let opts = "";
+  for (let i = 1; i <= n; i++) {
+    const note = i === 1 ? left : (i === n ? right : "");
+    opts += `<div class="scale-option"><input type="radio" name="${name}" value="${i}"><br>${i}` + (note ? `<p class="note">${note}</p>` : "") + `</div>`;
+  }
+  return `<div class="question"><p><strong>${text}</strong></p><div class="scale">${opts}</div></div>`;
+}
+function responseQuestions(prefix, label) {
+  return `<div class="question"><p><strong>Write a few words that come to your mind about the experience you just had.</strong></p>
+    <textarea id="${prefix}_Words" placeholder="Type your response here..."></textarea></div>` +
+    likert(prefix+"_Happy", `When you think about ${label}, how happy does it make you?`, "Not at all", "Very much") +
+    likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much");
+}
+function recallItems(prefix, x, aes) {
+  const items = [
+    `I perceive that ${x} as unique.`,
+    `That ${x} is different from others I have had.`,
+    `That ${x} is distinct.`,
+    `I think people have a more positive view about my ${x}.`,
+    `I think people regard me more highly after learning about my ${x}.`,
+    `That ${x} reflects who I am as a person.`,
+    `That ${x} is close to my sense of self.`,
+    `That ${x} is closely associated with my identity.`
+  ].concat(aes);
+  const names = [];
+  SUBS.forEach(([s,n]) => { for (let i=1;i<=n;i++) names.push(prefix+"_"+s+i); });
+  return items.map((t,i) => likert(names[i], t, "Strongly disagree", "Strongly agree")).join("");
+}
+function renderQuestions() {
+  document.getElementById("e1Container").innerHTML = responseQuestions("E1", "that virtual destination experience");
+  document.getElementById("e2Container").innerHTML = responseQuestions("E2", "the virtual sunglasses experience");
+  document.getElementById("r1Container").innerHTML = recallItems("E1", "virtual destination experience", [
+    "The virtual destination is aesthetically appealing.",
+    "The atmosphere of the virtual destination is wonderful.",
+    "The atmosphere of the virtual destination makes me feel comfortable and relaxed."]);
+  document.getElementById("r2Container").innerHTML = recallItems("E2", "virtual sunglasses experience", [
+    "The virtual sunglasses are aesthetically appealing.",
+    "The virtual try-on experience is wonderful.",
+    "The virtual try-on experience makes me feel comfortable and relaxed."]);
+}
+
+/* Helpers */
+function checkedValue(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : null;
+}
+function collectAnswers(names) {
+  const vals = {};
+  for (const n of names) { const v = checkedValue(n); if (v === null) return false; vals[n] = v; }
+  Object.assign(participantData, vals);
+  return true;
+}
+function radioNamesIn(containerId) {
+  return [...new Set([...document.querySelectorAll(`#${containerId} input[type=radio]`)].map(r => r.name))];
+}
+function showError(id, show) { document.getElementById(id).style.display = show ? "block" : "none"; }
+function fillRecall() {
+  document.getElementById("recall1Text").textContent = participantData.E1_Words || "(no response)";
+  document.getElementById("recall2Text").textContent = participantData.E2_Words || "(no response)";
+}
+
+/* Saving / syncing */
+function saveProgress(syncToSheet = true) {
+  participantData.lastUpdated = new Date().toISOString();
+  lsSet("vr_study_data2", JSON.stringify({ data: participantData, activePage: currentActivePage }));
+  if (syncToSheet && participantData.participantID) sendPartialDataToSheet(participantData);
+}
+function bindLiveAutoSave() {
+  document.addEventListener("change", (e) => {
+    const t = e.target; if (!t) return;
+    if (t.id === "consent") participantData.consent = t.checked;
+    else if (t.name) participantData[t.name] = t.value;
+    else if (t.id) participantData[t.id] = t.value;
+    saveProgress(false);
+  });
+  document.addEventListener("input", (e) => {
+    const t = e.target;
+    if (t && t.id && (["text","number","email"].includes(t.type) || t.tagName === "TEXTAREA")) {
+      participantData[t.id] = t.value; saveProgress(false);
+    }
+  });
+}
+function sendPartialDataToSheet(data) {
+  fetch(SCRIPT_URL, { method:"POST", mode:"no-cors", headers:{ "Content-Type":"text/plain" }, body: JSON.stringify(data) })
+    .catch(err => console.log("Background sync error (retry later):", err));
+}
+function switchPage(fromId, toId) {
+  document.getElementById(fromId).classList.remove("active");
+  document.getElementById(toId).classList.add("active");
+  currentActivePage = toId;
+  if (toId === "recall1Page" || toId === "recall2Page") fillRecall();
+  window.scrollTo(0, 0);
+  saveProgress(true);
+}
+function nextPage(fromId) {
+  const f = FLOW[participantData.Condition];
+  switchPage(fromId, f[f.indexOf(fromId) + 1]);
+}
+
+/* Page handlers */
+function goToParticipantInfo() {
+  if (!document.getElementById("consent").checked) { showError("consentError", true); return; }
+  showError("consentError", false);
+  participantData.consent = true;
+  switchPage("consentPage", "participantInfoPage");
+}
+function saveParticipantInfo() {
+  const id = document.getElementById("participantID").value.trim();
+  const email = document.getElementById("email").value.trim();
+  if (!/^\d+$/.test(id) || !email || !document.getElementById("email").checkValidity()) { showError("participantInfoError", true); return; }
+  showError("participantInfoError", false);
+  participantData.participantID = id;
+  participantData.email = email;
+  switchPage("participantInfoPage", "demographicPage");
+}
+function saveDemographics() {
+  const age = document.getElementById("age").value;
+  const gender = checkedValue("gender");
+  const edu = checkedValue("Education");
+  const income = document.getElementById("MonthlyIncome").value;
+  if (!age || !gender || !edu || !income) { showError("demographicError", true); return; }
+  showError("demographicError", false);
+  Object.assign(participantData, { age, gender, Education: edu, MonthlyIncome: income });
+  participantData.Condition = (parseInt(participantData.participantID, 10) % 2 === 1) ? "A" : "B";
+  switchPage("demographicPage", FLOW[participantData.Condition][0]);
+}
+function startExperience1() {
+  window.open(LINKS.destination, "_blank");
+  document.getElementById("exp1Message").style.display = "block";
+  document.getElementById("exp1Done").style.display = "inline-block";
+}
+function startExperience2(g) {
+  window.open(g === "male" ? LINKS.sunglassesMale : LINKS.sunglassesFemale, "_blank");
+  document.getElementById("exp2Message").style.display = "block";
+  document.getElementById("exp2Done").style.display = "inline-block";
+}
+function saveResponses(pageId, containerId, prefix, errId) {
+  const words = document.getElementById(prefix + "_Words").value.trim();
+  if (!words || !collectAnswers(radioNamesIn(containerId))) { showError(errId, true); return; }
+  participantData[prefix + "_Words"] = words;
+  showError(errId, false);
+  nextPage(pageId);
+}
+function saveRecall(pageId, prefix, errId) {
+  const cid = prefix === "E1" ? "r1Container" : "r2Container";
+  if (!collectAnswers(radioNamesIn(cid))) { showError(errId, true); return; }
+  showError(errId, false);
+  nextPage(pageId);
+}
+function submitStudy() {
+  if (!collectAnswers(["Purchase_Choice"])) { showError("finalError", true); return; }
+  showError("finalError", false);
+  if (lsGet("submitted_" + participantData.participantID)) { alert("This Participant ID has already submitted responses."); return; }
+  participantData.isComplete = true;
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true; btn.innerText = "Submitting...";
+  sendDataWithRetry(participantData);
+}
+function sendDataWithRetry(payload, maxRetries = 5, delay = 3000) {
+  saveProgress(false);
+  fetch(SCRIPT_URL, { method:"POST", mode:"no-cors", headers:{ "Content-Type":"text/plain" }, body: JSON.stringify(payload) })
+  .then(() => {
+    lsSet("submitted_" + payload.participantID, "true");
+    lsDel("vr_study_data2");
+    switchPageFinal();
+  })
+  .catch(() => {
+    if (maxRetries > 0) setTimeout(() => sendDataWithRetry(payload, maxRetries - 1, delay * 1.5), delay);
+    else {
+      const b = document.getElementById("submitBtn");
+      b.disabled = false; b.innerText = "Submit Study";
+      alert("Network error. Your responses remain saved on your device. Please try submitting again.");
+    }
+  });
+}
+function switchPageFinal() {
+  document.getElementById("finalPage").classList.remove("active");
+  document.getElementById("thankYouPage").classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+/* Restore after reload */
+function restoreProgress() {
+  const raw = lsGet("vr_study_data2");
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed.data) participantData = { ...participantData, ...parsed.data };
+    if (parsed.activePage && document.getElementById(parsed.activePage)) currentActivePage = parsed.activePage;
+    if (participantData.consent) document.getElementById("consent").checked = true;
+    ["participantID","email","age","MonthlyIncome","E1_Words","E2_Words"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && participantData[id] != null) el.value = participantData[id];
+    });
+    RADIOS.forEach(f => {
+      const v = participantData[f];
+      if (v != null && v !== "") {
+        const r = document.querySelector(`input[name="${f}"][value="${v}"]`);
+        if (r) r.checked = true;
+      }
+    });
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(currentActivePage).classList.add("active");
+    fillRecall();
+    if (currentActivePage === "experience1Page") {
+      document.getElementById("exp1Message").style.display = "block";
+      document.getElementById("exp1Done").style.display = "inline-block";
+    }
+    if (currentActivePage === "experience2Page") {
+      document.getElementById("exp2Message").style.display = "block";
+      document.getElementById("exp2Done").style.display = "inline-block";
+    }
+  } catch (e) { console.log("Could not restore progress:", e); }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  renderQuestions();
+  restoreProgress();
+  bindLiveAutoSave();
+});
+window.addEventListener("online", () => {
+  const raw = lsGet("vr_study_data2");
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw).data;
+    if (data.participantID && !lsGet("submitted_" + data.participantID)) sendPartialDataToSheet(data);
+  } catch (e) {}
+});
+</script>
+</body>
+</html>
