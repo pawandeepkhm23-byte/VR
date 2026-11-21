@@ -184,7 +184,7 @@ const FLOW = {
 };
 
 const SUBS = [["Uniq",3],["Social",2],["Self",3],["Aes",3]];
-const E_FIELDS = ["Words","Happy","Contrib"];
+const E_FIELDS = ["Words","Happy","Contrib","Talk1","Talk2","Talk3","Talk4","Talk5"];
 const RADIOS = ["gender","Education","Purchase_Choice"];
 let participantData = {
   participantID:null, email:null, age:null, gender:null, Education:null, MonthlyIncome:null, Condition:null,
@@ -210,13 +210,19 @@ function likert(name, text, left, right, n = 7) {
   }
   return `<div class="question"><p><strong>${text}</strong></p><div class="scale">${opts}</div></div>`;
 }
-function responseQuestions(prefix, label) {
+function responseQuestions(prefix, label, x) {
+  const talk = [
+    `That ${x} makes for a good conversation.`,
+    `I want to talk to others about that ${x}.`,
+    `That ${x} is a good topic to talk about.`,
+    `I desire to talk to people about that ${x}.`,
+    `I feel excited about telling others about that ${x}.`
+  ];
   return `<div class="question"><p><strong>Write a few words that come to your mind about the experience you just had.</strong></p>
     <textarea id="${prefix}_Words" placeholder="Type your response here..."></textarea></div>` +
     likert(prefix+"_Happy", `When you think about ${label}, how happy does it make you?`, "Not at all", "Very much") +
-    likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much");
-    
-    
+    likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much") +
+    talk.map((t,i) => likert(prefix+"_Talk"+(i+1), t, "Strongly disagree", "Strongly agree")).join("");
 }
 function recallItems(prefix, x, aes) {
   const items = [
@@ -234,8 +240,8 @@ function recallItems(prefix, x, aes) {
   return items.map((t,i) => likert(names[i], t, "Strongly disagree", "Strongly agree")).join("");
 }
 function renderQuestions() {
-  document.getElementById("e1Container").innerHTML = responseQuestions("E1", "that virtual destination experience");
-  document.getElementById("e2Container").innerHTML = responseQuestions("E2", "the virtual sunglasses experience");
+  document.getElementById("e1Container").innerHTML = responseQuestions("E1", "that virtual destination experience", "virtual destination experience");
+  document.getElementById("e2Container").innerHTML = responseQuestions("E2", "the virtual sunglasses experience", "virtual sunglasses experience");
   document.getElementById("r1Container").innerHTML = recallItems("E1", "virtual destination experience", [
     "The virtual destination is aesthetically appealing.",
     "The atmosphere of the virtual destination is wonderful.",
