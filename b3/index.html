@@ -215,6 +215,8 @@ function responseQuestions(prefix, label) {
     <textarea id="${prefix}_Words" placeholder="Type your response here..."></textarea></div>` +
     likert(prefix+"_Happy", `When you think about ${label}, how happy does it make you?`, "Not at all", "Very much") +
     likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much");
+    
+    
 }
 function recallItems(prefix, x, aes) {
   const items = [
