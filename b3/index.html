@@ -22,6 +22,9 @@ button{margin-top:25px;margin-right:10px;padding:12px 25px;font-size:16px;cursor
 .scale-option{text-align:center;flex:1;font-size:14px}
 .scale-option input{width:auto}
 .scale-option .note{margin:4px 0 0;font-size:12px;line-height:1.3}
+.yesno-options{display:flex;gap:30px;margin-top:10px}
+.yesno-options label{display:flex;align-items:center;gap:6px;margin:0}
+.yesno-options input{width:auto}
 .recall{background:#eef4ff;border-left:4px solid #4a78c2;padding:15px 20px;margin:20px 0;white-space:pre-wrap}
 </style>
 </head>
@@ -183,6 +186,12 @@ const FLOW = {
   B: ["experience2Page","experience2ResponsePage","experience1Page","experience1ResponsePage","recall1Page","recall2Page","finalPage"]
 };
 
+/* Past-experience question wording per stimulus (E1 = destination, E2 = sunglasses) */
+const PAST_EXP_TEXT = {
+  E1: "Have you visited a similar destination as you explored virtually in the past six months?",
+  E2: "Have you purchased similar sunglasses as you explored virtually in the past six months?"
+};
+
 const SUBS = [["Uniq",3],["Social",2],["Self",3],["Aes",3]];
 const E_FIELDS = ["pastexp", "famil", "Words","Happy","Contrib","Talk1","Talk2","Talk3","Talk4","Talk5"];
 const RADIOS = ["gender","Education","Purchase_Choice"];
@@ -210,17 +219,13 @@ function likert(name, text, left, right, n = 7) {
   }
   return `<div class="question"><p><strong>${text}</strong></p><div class="scale">${opts}</div></div>`;
 }
-function yesno(name, question, yesLabel = "No", noLabel = "Yes") {
-  return `
-    <div class="item">
-      <p class="question">${question}</p>
-      <label><input type="radio" name="${name}" value="0" required> ${noLabel}</label>
-      <label><input type="radio" name="${name}" value="1" required> ${yesLabel}</label>
-    </div>`;
-  const pastExpText = {
-  destination: "Have you visited a similar destination as you explored virtually in the past six months?",
-  sunglasses:  "Have you purchased similar sunglasses as you explored virtually in the past six months?"
-};
+function yesno(name, text, yesLabel = "Yes", noLabel = "No") {
+  return `<div class="question"><p><strong>${text}</strong></p>
+    <div class="yesno-options">
+      <label><input type="radio" name="${name}" value="1"> ${yesLabel}</label>
+      <label><input type="radio" name="${name}" value="0"> ${noLabel}</label>
+    </div></div>`;
+}
 
 function responseQuestions(prefix, label, x) {
   const talk = [
@@ -232,9 +237,7 @@ function responseQuestions(prefix, label, x) {
   ];
   return `<div class="question"><p><strong>Write a few words that come to your mind about the experience you just had.</strong></p>
     <textarea id="${prefix}_Words" placeholder="Type your response here..."></textarea></div>` +
-    
-
-    yesno(prefix+"_pastexp", pastExpText[productType]) +
+    yesno(prefix+"_pastexp", PAST_EXP_TEXT[prefix]) +
     likert(prefix+"_famil", `How familiar are you with ${label}?`, "Not at all", "Very much") +
     likert(prefix+"_Happy", `When you think about ${label}, how happy does it make you?`, "Not at all", "Very much") +
     likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much") +
