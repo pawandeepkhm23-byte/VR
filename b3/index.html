@@ -210,6 +210,14 @@ function likert(name, text, left, right, n = 7) {
   }
   return `<div class="question"><p><strong>${text}</strong></p><div class="scale">${opts}</div></div>`;
 }
+function yesno(name, question, yesLabel = "No", noLabel = "Yes") {
+  return `
+    <div class="item">
+      <p class="question">${question}</p>
+      <label><input type="radio" name="${name}" value="0" required> ${noLabel}</label>
+      <label><input type="radio" name="${name}" value="1" required> ${yesLabel}</label>
+    </div>`;
+}
 function responseQuestions(prefix, label, x) {
   const talk = [
     `That ${x} makes for a good conversation.`,
@@ -220,7 +228,7 @@ function responseQuestions(prefix, label, x) {
   ];
   return `<div class="question"><p><strong>Write a few words that come to your mind about the experience you just had.</strong></p>
     <textarea id="${prefix}_Words" placeholder="Type your response here..."></textarea></div>` +
-    likert(prefix+"_pastexp", `Have you visited a similar destination as you explored virtually in the past six months?`, "No", "Yes") +
+    yesno(prefix+"_pastexp", `Have you visited a similar destination as you explored virtually in the past six months?`) +
     likert(prefix+"_famil", `How familiar are you with ${label}?`, "Not at all", "Very much") +
     likert(prefix+"_Happy", `When you think about ${label}, how happy does it make you?`, "Not at all", "Very much") +
     likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much") +
