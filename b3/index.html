@@ -228,7 +228,12 @@ function responseQuestions(prefix, label, x) {
   ];
   return `<div class="question"><p><strong>Write a few words that come to your mind about the experience you just had.</strong></p>
     <textarea id="${prefix}_Words" placeholder="Type your response here..."></textarea></div>` +
-    yesno(prefix+"_pastexp", `Have you visited a similar destination as you explored virtually in the past six months?`) +
+    const pastExpText = {
+  destination: "Have you visited a similar destination as you explored virtually in the past six months?",
+  sunglasses:  "Have you purchased similar sunglasses as you explored virtually in the past six months?"
+};
+
+yesno(prefix+"_pastexp", pastExpText[productType]) +
     likert(prefix+"_famil", `How familiar are you with ${label}?`, "Not at all", "Very much") +
     likert(prefix+"_Happy", `When you think about ${label}, how happy does it make you?`, "Not at all", "Very much") +
     likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much") +
