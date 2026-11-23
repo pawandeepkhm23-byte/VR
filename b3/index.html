@@ -172,7 +172,7 @@ button{margin-top:25px;margin-right:10px;padding:12px 25px;font-size:16px;cursor
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5M_EimgwhZo4NnItF5VBcPJLey1VVDCRaWTENiVRHgtHc5CnMg2uApUmS6moEiPBGzg/exec";  // TODO: replace
 const LINKS = {                                                  // TODO: replace placeholders
-  destination: "https://example.com/destination",
+  destination: "https://www.google.com",
   sunglassesMale: "https://example.com/mens-sunglasses",
   sunglassesFemale: "https://example.com/womens-sunglasses"
 };
@@ -184,7 +184,7 @@ const FLOW = {
 };
 
 const SUBS = [["Uniq",3],["Social",2],["Self",3],["Aes",3]];
-const E_FIELDS = ["Words","Happy","Contrib","Talk1","Talk2","Talk3","Talk4","Talk5"];
+const E_FIELDS = ["pastexp", "famil", "Words","Happy","Contrib","Talk1","Talk2","Talk3","Talk4","Talk5"];
 const RADIOS = ["gender","Education","Purchase_Choice"];
 let participantData = {
   participantID:null, email:null, age:null, gender:null, Education:null, MonthlyIncome:null, Condition:null,
@@ -220,6 +220,8 @@ function responseQuestions(prefix, label, x) {
   ];
   return `<div class="question"><p><strong>Write a few words that come to your mind about the experience you just had.</strong></p>
     <textarea id="${prefix}_Words" placeholder="Type your response here..."></textarea></div>` +
+    likert(prefix+"_pastexp", `Have you visited a similar destination as you explored virtually in the past six months?`, "No", "Yes") +
+    likert(prefix+"_famil", `How familiar are you with ${label}?`, "Not at all", "Very much") +
     likert(prefix+"_Happy", `When you think about ${label}, how happy does it make you?`, "Not at all", "Very much") +
     likert(prefix+"_Contrib", `How much does ${label} contribute to your happiness in life?`, "Not at all", "Very much") +
     talk.map((t,i) => likert(prefix+"_Talk"+(i+1), t, "Strongly disagree", "Strongly agree")).join("");
